@@ -1,0 +1,276 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Background */
+
+.reaction-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+
+  background: linear-gradient(
+    135deg,
+    #020617,
+    #0f172a,
+    #1e3a8a
+  );
+
+  background-size: 300% 300%;
+  animation: gradientMove 8s ease infinite;
+  transition: 0.4s;
+}
+
+/* Green screen when ready */
+
+.green {
+  background: linear-gradient(
+    135deg,
+    #16a34a,
+    #22c55e
+  );
+}
+
+/* Main Card */
+
+.reaction-card {
+  width: 100%;
+  max-width: 600px;
+
+  padding: 45px 35px;
+
+  background: rgba(255, 255, 255, 0.96);
+
+  border-radius: 22px;
+
+  text-align: center;
+
+  box-shadow: 0 20px 50px rgba(0, 0, 0, .30);
+
+  animation: fadeIn .4s ease;
+}
+
+/* Title */
+
+.reaction-card h1 {
+  font-size: 2.3rem;
+  color: #0f172a;
+  margin-bottom: 18px;
+}
+
+/* Description */
+
+.description {
+  color: #2563eb;
+  font-size: 1.05rem;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.reaction-card p {
+  color: #475569;
+  font-size: 1.08rem;
+  line-height: 1.7;
+  margin-bottom: 22px;
+}
+
+/* Highlight */
+
+.green-text {
+  color: #16a34a;
+  font-weight: bold;
+}
+
+/* Best Score */
+
+.best-score {
+  margin: 25px 0;
+  color: #f59e0b;
+  font-size: 1.3rem;
+}
+
+/* Buttons */
+
+button {
+  margin-top: 10px;
+
+  padding: 16px 40px;
+
+  border: none;
+
+  border-radius: 50px;
+
+  cursor: pointer;
+
+  font-size: 18px;
+
+  font-weight: bold;
+
+  color: white;
+
+  background: linear-gradient(
+    135deg,
+    #2563eb,
+    #3b82f6
+  );
+
+  box-shadow: 0 12px 25px rgba(37, 99, 235, .35);
+
+  transition: .25s;
+}
+
+button:hover {
+  transform: translateY(-3px) scale(1.03);
+
+  box-shadow: 0 20px 35px rgba(37,99,235,.45);
+}
+
+button:active {
+  transform: scale(.97);
+}
+
+/* Waiting animation */
+
+.waiting span {
+  animation: blink 1.4s infinite;
+}
+
+.waiting span:nth-child(2) {
+  animation-delay: .2s;
+}
+
+.waiting span:nth-child(3) {
+  animation-delay: .4s;
+}
+
+/* Reaction Time */
+
+.score {
+  font-size: 72px;
+  color: #2563eb;
+  margin: 25px 0;
+  font-weight: bold;
+}
+
+/* Score */
+
+.score-points {
+  color: #f59e0b;
+  font-size: 28px;
+  margin-bottom: 15px;
+}
+
+/* Rating */
+
+.rating {
+  font-size: 24px;
+  color: #16a34a;
+  font-weight: bold;
+  margin-bottom: 18px;
+}
+
+/* Record */
+
+.new-record {
+  font-size: 22px;
+  color: #16a34a;
+  font-weight: bold;
+
+  animation: bounce .8s infinite;
+}
+
+/* Animations */
+
+@keyframes fadeIn {
+
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+@keyframes gradientMove {
+
+  0% {
+    background-position: left;
+  }
+
+  50% {
+    background-position: right;
+  }
+
+  100% {
+    background-position: left;
+  }
+
+}
+
+@keyframes blink {
+
+  0%,80%,100% {
+    opacity: 0;
+  }
+
+  40% {
+    opacity: 1;
+  }
+
+}
+
+@keyframes bounce {
+
+  0%,100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+
+}
+
+/* Mobile */
+
+@media (max-width:768px) {
+
+  .reaction-card {
+    padding: 35px 22px;
+  }
+
+  .reaction-card h1 {
+    font-size: 1.8rem;
+  }
+
+  .reaction-card p {
+    font-size: 1rem;
+  }
+
+  .score {
+    font-size: 52px;
+  }
+
+  .score-points {
+    font-size: 22px;
+  }
+
+  .rating {
+    font-size: 20px;
+  }
+
+  button {
+    width: 100%;
+    font-size: 17px;
+  }
+
+}
