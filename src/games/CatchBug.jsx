@@ -31,7 +31,7 @@ const AudioEngine = {
     setTimeout(() => this.playTone(150, 'sawtooth', 0.2, 0.05), 100);
   },
   spawn() {
-    this.playTone(600, 'sine', 0.05, 0.03);
+    this.playTone(600, 'sine', 0.05, 0.03); 
   },
   countdown() {
     this.playTone(440, 'square', 0.2, 0.1);

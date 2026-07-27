@@ -1,0 +1,50 @@
+.about-container {
+  min-height: 100vh;
+  background: #0f172a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.about-card {
+  max-width: 900px;
+  background: white;
+  border-radius: 15px;
+  padding: 35px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.about-logo {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+  margin-bottom: 20px;
+}
+
+.about-card h1 {
+  color: #0b4d91;
+  margin-bottom: 20px;
+}
+
+.about-card h2 {
+  color: #0b4d91;
+  margin-top: 25px;
+}
+
+.about-card p {
+  color: #444;
+  line-height: 1.8;
+  margin-bottom: 15px;
+}
+
+.about-card ul {
+  text-align: left;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+.about-card li {
+  margin: 10px 0;
+}
