@@ -1,5 +1,6 @@
 import React from 'react';
 import './About.css';
+import rudraLogo from "../assets/rudra-logo.png";
 
 const RudraAbout = () => {
   return (
@@ -13,7 +14,7 @@ const RudraAbout = () => {
         <div className="rudra-logo-container">
           <div className="rudra-logo-glow" />
           <img 
-            src="/rudra-logo.png" 
+            src={rudraLogo}
             alt="RUDRA Logo" 
             className="rudra-logo-img"
             onError={(e) => {
