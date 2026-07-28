@@ -1,148 +1,241 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import "./RudraGame.css";
 
-/* ───────────── CONFIGURATION ───────────── */
-const TOTAL_TIME = 60;
-const MAX_LEVELS = 12;
+const MAX_LEVELS = 20;
 
 const DIFFICULTY = {
-  casual:     { name: "Casual",      gridBase: 3, moveInterval: 0,    glitch: false },
-  analyst:    { name: "Analyst",     gridBase: 4, moveInterval: 2000, glitch: false },
-  cyber:      { name: "Cyber Expert",gridBase: 5, moveInterval: 1500, glitch: true  },
+  casual:  { name: "Casual",      gridBase: 3, scoreMult: 1,   time: 60, moveInterval: 0,    glitch: false },
+  analyst: { name: "Analyst",     gridBase: 4, scoreMult: 1.5, time: 30, moveInterval: 2000, glitch: false },
+  cyber:   { name: "Cyber Expert",gridBase: 5, scoreMult: 2.5, time: 15, moveInterval: 1500, glitch: true  },
 };
 
-/* ───────────── ASSETS ───────────── */
 const RudraLogo = ({ className = "" }) => (
   <svg viewBox="0 0 200 200" className={`rudra-logo-svg ${className}`}>
     <defs>
-      <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <linearGradient id="rudraBorder" x1="0%" y1="0%" x2="100%" y2="100%">
         <stop offset="0%" stopColor="#0ea5e9" />
-        <stop offset="100%" stopColor="#0284c7" />
+        <stop offset="50%" stopColor="#0284c7" />
+        <stop offset="100%" stopColor="#0ea5e9" />
       </linearGradient>
-      <filter id="glow">
-        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-        <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      <filter id="rudraGlow">
+        <feGaussianBlur stdDeviation="2.5" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
       </filter>
     </defs>
-    {/* Outer ring */}
-    <circle cx="100" cy="100" r="96" fill="none" stroke="url(#borderGrad)" strokeWidth="10" />
+    <circle cx="100" cy="100" r="96" fill="none" stroke="url(#rudraBorder)" strokeWidth="10" />
     <circle cx="100" cy="100" r="91" fill="#0a0a0a" />
-    {/* Decorative ring dots */}
-    <circle cx="100" cy="8"  r="6" fill="#0ea5e9" />
-    <circle cx="100" cy="192" r="6" fill="#0ea5e9" opacity="0.4" />
-    {/* 3D Bars */}
-    <g transform="translate(40,70)">
-      <rect x="0"  y="40" width="22" height="40" fill="#0ea5e9" stroke="#0284c7" strokeWidth="1"/>
-      <rect x="0"  y="40" width="22" height="8"  fill="#38bdf8" />
-      <rect x="28" y="20" width="22" height="60" fill="#0ea5e9" stroke="#0284c7" strokeWidth="1"/>
-      <rect x="28" y="20" width="22" height="8"  fill="#38bdf8" />
-      <rect x="56" y="30" width="22" height="50" fill="#0ea5e9" stroke="#0284c7" strokeWidth="1"/>
-      <rect x="56" y="30" width="22" height="8"  fill="#38bdf8" />
-      <rect x="84" y="10" width="22" height="70" fill="#0ea5e9" stroke="#0284c7" strokeWidth="1"/>
-      <rect x="84" y="10" width="22" height="8"  fill="#38bdf8" />
+    <circle cx="100" cy="6"   r="7" fill="#0ea5e9" />
+    <circle cx="100" cy="194" r="7" fill="#0ea5e9" opacity="0.3" />
+    <circle cx="6"   cy="100" r="5" fill="#0ea5e9" opacity="0.5" />
+    <circle cx="194" cy="100" r="5" fill="#0ea5e9" opacity="0.5" />
+    <g transform="translate(42,68)">
+      <polygon points="0,30 58,0 116,30 58,60" fill="#1e293b" stroke="#334155" strokeWidth="0.5" opacity="0.6"/>
+      <polygon points="0,30 58,60 58,68 0,38" fill="#0f172a" opacity="0.8"/>
+      <polygon points="58,60 116,30 116,38 58,68" fill="#1e293b" opacity="0.9"/>
+      <rect x="6"  y="42" width="18" height="28" fill="#0ea5e9" stroke="#0284c7" strokeWidth="0.8"/>
+      <rect x="6"  y="42" width="18" height="7"  fill="#38bdf8" />
+      <rect x="30" y="22" width="18" height="48" fill="#0ea5e9" stroke="#0284c7" strokeWidth="0.8"/>
+      <rect x="30" y="22" width="18" height="7"  fill="#38bdf8" />
+      <rect x="54" y="32" width="18" height="38" fill="#0ea5e9" stroke="#0284c7" strokeWidth="0.8"/>
+      <rect x="54" y="32" width="18" height="7"  fill="#38bdf8" />
+      <rect x="78" y="12" width="18" height="58" fill="#0ea5e9" stroke="#0284c7" strokeWidth="0.8"/>
+      <rect x="78" y="12" width="18" height="7"  fill="#38bdf8" />
     </g>
-    {/* Zigzag arrow */}
-    <polyline points="50,115 75,95 100,105 125,75 150,55"
-      fill="none" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" filter="url(#glow)"/>
-    <polygon points="150,55 140,58 142,68" fill="white" />
-    {/* Base plate */}
-    <rect x="35" y="115" width="110" height="4" fill="#334155" rx="1" />
-    {/* RUDRA Text */}
-    <text x="100" y="155" textAnchor="middle" fill="#38bdf8" fontSize="26" fontWeight="900"
-      fontFamily="'Segoe UI', system-ui, sans-serif" letterSpacing="3" filter="url(#glow)">RUDRA</text>
-    {/* Subtitle */}
-    <text x="100" y="170" textAnchor="middle" fill="#94a3b8" fontSize="7" fontWeight="600"
-      fontFamily="'Segoe UI', system-ui, sans-serif" letterSpacing="0.5">RESOURCEFUL UNIT FOR DATA RESEARCH</text>
-    <text x="100" y="180" textAnchor="middle" fill="#94a3b8" fontSize="7" fontWeight="600"
-      fontFamily="'Segoe UI', system-ui, sans-serif" letterSpacing="0.5">AND ANALYTICS</text>
-    {/* Trend arrow */}
-    <polyline points="130,175 160,150 190,130" fill="none" stroke="#0ea5e9" strokeWidth="2" opacity="0.6"/>
-    <polygon points="190,130 182,134 184,142" fill="#0ea5e9" opacity="0.6" />
+    <polyline points="52,118 78,98 102,108 128,78 152,58"
+      fill="none" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" filter="url(#rudraGlow)"/>
+    <polygon points="152,58 142,62 144,72" fill="white" />
+    <text x="100" y="158" textAnchor="middle" fill="#38bdf8" fontSize="28" fontWeight="900"
+      fontFamily="'Segoe UI', system-ui, sans-serif" letterSpacing="4" filter="url(#rudraGlow)">RUDRA</text>
+    <text x="100" y="172" textAnchor="middle" fill="#64748b" fontSize="6.5" fontWeight="600"
+      fontFamily="'Segoe UI', system-ui, sans-serif" letterSpacing="0.8">RESOURCEFUL UNIT FOR DATA RESEARCH</text>
+    <text x="100" y="180" textAnchor="middle" fill="#64748b" fontSize="6.5" fontWeight="600"
+      fontFamily="'Segoe UI', system-ui, sans-serif" letterSpacing="0.8">AND ANALYTICS</text>
+    <polyline points="132,178 158,158 188,138" fill="none" stroke="#0ea5e9" strokeWidth="2" opacity="0.5"/>
+    <polygon points="188,138 180,142 182,150" fill="#0ea5e9" opacity="0.5" />
   </svg>
 );
 
 const FakeIcons = {
-  chart: (
+  systemAlert: (
     <svg viewBox="0 0 64 64" className="fake-icon">
-      <rect x="8" y="8" width="48" height="48" rx="4" fill="none" stroke="#0ea5e9" strokeWidth="2" opacity="0.6"/>
-      <polyline points="12,48 24,36 36,42 52,20" fill="none" stroke="#38bdf8" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-      <circle cx="52" cy="20" r="3" fill="#0ea5e9"/>
-      <rect x="10" y="50" width="44" height="2" fill="#334155"/>
-      <rect x="10" y="10" width="2" height="42" fill="#334155"/>
+      <rect x="10" y="8" width="44" height="48" rx="3" fill="none" stroke="#ef4444" strokeWidth="2" opacity="0.7"/>
+      <rect x="14" y="12" width="36" height="6" fill="#ef4444" opacity="0.3"/>
+      <line x1="18" y1="28" x2="46" y2="28" stroke="#ef4444" strokeWidth="2" opacity="0.6"/>
+      <line x1="18" y1="36" x2="38" y2="36" stroke="#ef4444" strokeWidth="2" opacity="0.4"/>
+      <line x1="18" y1="44" x2="42" y2="44" stroke="#ef4444" strokeWidth="2" opacity="0.5"/>
+      <circle cx="50" cy="50" r="5" fill="none" stroke="#ef4444" strokeWidth="2"/>
+      <line x1="47" y1="50" x2="53" y2="50" stroke="#ef4444" strokeWidth="2"/>
     </svg>
   ),
-  pie: (
+  financialFeed: (
     <svg viewBox="0 0 64 64" className="fake-icon">
-      <circle cx="32" cy="32" r="20" fill="none" stroke="#0ea5e9" strokeWidth="3" opacity="0.7"/>
-      <path d="M32,32 L32,12 A20,20 0 0,1 48,20 Z" fill="#0ea5e9" opacity="0.4"/>
-      <path d="M32,32 L48,20 A20,20 0 0,1 52,32 Z" fill="#38bdf8" opacity="0.3"/>
+      <rect x="8" y="8" width="48" height="48" rx="3" fill="none" stroke="#22c55e" strokeWidth="1.5" opacity="0.5"/>
+      <polyline points="12,48 20,40 28,44 36,32 44,36 52,20" fill="none" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <circle cx="52" cy="20" r="3" fill="#22c55e" opacity="0.8"/>
+      <rect x="10" y="50" width="44" height="1.5" fill="#334155"/>
+      <rect x="10" y="10" width="1.5" height="42" fill="#334155"/>
+    </svg>
+  ),
+  bandwidthLoss: (
+    <svg viewBox="0 0 64 64" className="fake-icon">
+      <rect x="8" y="8" width="48" height="48" rx="3" fill="none" stroke="#f59e0b" strokeWidth="1.5" opacity="0.5"/>
+      <polyline points="12,20 20,28 28,24 36,36 44,32 52,48" fill="none" stroke="#f59e0b" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <circle cx="52" cy="48" r="3" fill="#f59e0b" opacity="0.8"/>
+      <rect x="10" y="50" width="44" height="1.5" fill="#334155"/>
+      <rect x="10" y="10" width="1.5" height="42" fill="#334155"/>
+    </svg>
+  ),
+  cpuLoad: (
+    <svg viewBox="0 0 64 64" className="fake-icon">
+      <rect x="12" y="12" width="40" height="40" rx="2" fill="none" stroke="#0ea5e9" strokeWidth="1.5" opacity="0.5"/>
+      <rect x="18" y="38" width="6" height="10" fill="#0ea5e9" opacity="0.6"/>
+      <rect x="28" y="30" width="6" height="18" fill="#0ea5e9" opacity="0.7"/>
+      <rect x="38" y="22" width="6" height="26" fill="#0ea5e9" opacity="0.8"/>
+      <line x1="14" y1="52" x2="50" y2="52" stroke="#334155" strokeWidth="1"/>
     </svg>
   ),
   shield: (
     <svg viewBox="0 0 64 64" className="fake-icon">
-      <path d="M32,8 L52,16 L52,30 Q52,48 32,56 Q12,48 12,30 L12,16 Z" fill="none" stroke="#0ea5e9" strokeWidth="2.5" opacity="0.7"/>
-      <path d="M22,30 L30,38 L42,24" fill="none" stroke="#38bdf8" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M32,10 L50,18 L50,32 Q50,46 32,54 Q14,46 14,32 L14,18 Z" fill="none" stroke="#0ea5e9" strokeWidth="2" opacity="0.6"/>
+      <path d="M24,32 L30,38 L40,26" fill="none" stroke="#38bdf8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   ),
   lock: (
     <svg viewBox="0 0 64 64" className="fake-icon">
-      <rect x="16" y="28" width="32" height="26" rx="3" fill="none" stroke="#0ea5e9" strokeWidth="2.5" opacity="0.7"/>
-      <path d="M22,28 V20 A10,10 0 0,1 42,20 V28" fill="none" stroke="#0ea5e9" strokeWidth="2.5" opacity="0.7"/>
-      <circle cx="32" cy="41" r="3" fill="#38bdf8" opacity="0.8"/>
-      <line x1="32" y1="44" x2="32" y2="48" stroke="#38bdf8" strokeWidth="2"/>
-    </svg>
-  ),
-  bug: (
-    <svg viewBox="0 0 64 64" className="fake-icon">
-      <circle cx="32" cy="30" r="10" fill="none" stroke="#ef4444" strokeWidth="2" opacity="0.8"/>
-      <line x1="32" y1="20" x2="32" y2="12" stroke="#ef4444" strokeWidth="2"/>
-      <line x1="24" y1="24" x2="18" y2="18" stroke="#ef4444" strokeWidth="2"/>
-      <line x1="40" y1="24" x2="46" y2="18" stroke="#ef4444" strokeWidth="2"/>
-      <line x1="22" y1="34" x2="14" y2="32" stroke="#ef4444" strokeWidth="2"/>
-      <line x1="42" y1="34" x2="50" y2="32" stroke="#ef4444" strokeWidth="2"/>
-      <path d="M26,40 Q32,50 38,40" fill="none" stroke="#ef4444" strokeWidth="2"/>
+      <rect x="18" y="28" width="28" height="22" rx="3" fill="none" stroke="#f59e0b" strokeWidth="2" opacity="0.6"/>
+      <path d="M24,28 V20 A8,8 0 0,1 40,20 V28" fill="none" stroke="#f59e0b" strokeWidth="2" opacity="0.6"/>
+      <circle cx="32" cy="39" r="3" fill="#f59e0b" opacity="0.7"/>
+      <line x1="32" y1="42" x2="32" y2="46" stroke="#f59e0b" strokeWidth="2"/>
     </svg>
   ),
   database: (
     <svg viewBox="0 0 64 64" className="fake-icon">
-      <ellipse cx="32" cy="16" rx="18" ry="6" fill="none" stroke="#0ea5e9" strokeWidth="2" opacity="0.7"/>
-      <path d="M14,16 V32 A18,6 0 0,0 50,32 V16" fill="none" stroke="#0ea5e9" strokeWidth="2" opacity="0.7"/>
-      <path d="M14,32 V48 A18,6 0 0,0 50,48 V32" fill="none" stroke="#0ea5e9" strokeWidth="2" opacity="0.7"/>
-      <line x1="14" y1="24" x2="50" y2="24" stroke="#0ea5e9" strokeWidth="1" opacity="0.4"/>
-      <line x1="14" y1="40" x2="50" y2="40" stroke="#0ea5e9" strokeWidth="1" opacity="0.4"/>
+      <ellipse cx="32" cy="16" rx="16" ry="6" fill="none" stroke="#a855f7" strokeWidth="2" opacity="0.6"/>
+      <path d="M16,16 V30 A16,6 0 0,0 48,30 V16" fill="none" stroke="#a855f7" strokeWidth="2" opacity="0.6"/>
+      <path d="M16,30 V44 A16,6 0 0,0 48,44 V30" fill="none" stroke="#a855f7" strokeWidth="2" opacity="0.6"/>
+      <line x1="16" y1="23" x2="48" y2="23" stroke="#a855f7" strokeWidth="1" opacity="0.3"/>
+      <line x1="16" y1="37" x2="48" y2="37" stroke="#a855f7" strokeWidth="1" opacity="0.3"/>
     </svg>
   ),
   network: (
     <svg viewBox="0 0 64 64" className="fake-icon">
-      <circle cx="20" cy="20" r="6" fill="none" stroke="#0ea5e9" strokeWidth="2"/>
-      <circle cx="44" cy="20" r="6" fill="none" stroke="#0ea5e9" strokeWidth="2"/>
-      <circle cx="32" cy="48" r="6" fill="none" stroke="#0ea5e9" strokeWidth="2"/>
-      <line x1="24" y1="24" x2="38" y2="44" stroke="#38bdf8" strokeWidth="1.5" opacity="0.6"/>
-      <line x1="40" y1="24" x2="26" y2="44" stroke="#38bdf8" strokeWidth="1.5" opacity="0.6"/>
-      <line x1="20" y1="26" x2="20" y2="42" stroke="#38bdf8" strokeWidth="1.5" opacity="0.6"/>
-      <line x1="44" y1="26" x2="44" y2="42" stroke="#38bdf8" strokeWidth="1.5" opacity="0.6"/>
+      <circle cx="20" cy="20" r="5" fill="none" stroke="#0ea5e9" strokeWidth="1.5"/>
+      <circle cx="44" cy="20" r="5" fill="none" stroke="#0ea5e9" strokeWidth="1.5"/>
+      <circle cx="32" cy="46" r="5" fill="none" stroke="#0ea5e9" strokeWidth="1.5"/>
+      <line x1="24" y1="24" x2="38" y2="42" stroke="#38bdf8" strokeWidth="1.2" opacity="0.5"/>
+      <line x1="40" y1="24" x2="26" y2="42" stroke="#38bdf8" strokeWidth="1.2" opacity="0.5"/>
+      <line x1="20" y1="25" x2="20" y2="41" stroke="#38bdf8" strokeWidth="1.2" opacity="0.5"/>
+      <line x1="44" y1="25" x2="44" y2="41" stroke="#38bdf8" strokeWidth="1.2" opacity="0.5"/>
     </svg>
   ),
   fingerprint: (
     <svg viewBox="0 0 64 64" className="fake-icon">
-      <path d="M20,32 Q20,16 32,16 Q44,16 44,32" fill="none" stroke="#0ea5e9" strokeWidth="2" opacity="0.6"/>
-      <path d="M24,32 Q24,22 32,22 Q40,22 40,32" fill="none" stroke="#0ea5e9" strokeWidth="2" opacity="0.6"/>
-      <path d="M28,32 Q28,26 32,26 Q36,26 36,32" fill="none" stroke="#0ea5e9" strokeWidth="2" opacity="0.6"/>
-      <line x1="32" y1="30" x2="32" y2="48" stroke="#38bdf8" strokeWidth="2" opacity="0.7"/>
+      <path d="M20,32 Q20,18 32,18 Q44,18 44,32" fill="none" stroke="#0ea5e9" strokeWidth="2" opacity="0.5"/>
+      <path d="M24,32 Q24,24 32,24 Q40,24 40,32" fill="none" stroke="#0ea5e9" strokeWidth="2" opacity="0.5"/>
+      <path d="M28,32 Q28,28 32,28 Q36,28 36,32" fill="none" stroke="#0ea5e9" strokeWidth="2" opacity="0.5"/>
+      <line x1="32" y1="30" x2="32" y2="48" stroke="#38bdf8" strokeWidth="2" opacity="0.6"/>
+    </svg>
+  ),
+  bug: (
+    <svg viewBox="0 0 64 64" className="fake-icon">
+      <circle cx="32" cy="30" r="9" fill="none" stroke="#ef4444" strokeWidth="2" opacity="0.7"/>
+      <line x1="32" y1="21" x2="32" y2="13" stroke="#ef4444" strokeWidth="1.5"/>
+      <line x1="25" y1="24" x2="19" y2="18" stroke="#ef4444" strokeWidth="1.5"/>
+      <line x1="39" y1="24" x2="45" y2="18" stroke="#ef4444" strokeWidth="1.5"/>
+      <line x1="23" y1="33" x2="15" y2="31" stroke="#ef4444" strokeWidth="1.5"/>
+      <line x1="41" y1="33" x2="49" y2="31" stroke="#ef4444" strokeWidth="1.5"/>
+      <path d="M26,40 Q32,48 38,40" fill="none" stroke="#ef4444" strokeWidth="1.5"/>
+    </svg>
+  ),
+  pieChart: (
+    <svg viewBox="0 0 64 64" className="fake-icon">
+      <circle cx="32" cy="32" r="18" fill="none" stroke="#0ea5e9" strokeWidth="2.5" opacity="0.6"/>
+      <path d="M32,32 L32,14 A18,18 0 0,1 46,22 Z" fill="#0ea5e9" opacity="0.3"/>
+      <path d="M32,32 L46,22 A18,18 0 0,1 50,32 Z" fill="#38bdf8" opacity="0.2"/>
+    </svg>
+  ),
+  waveform: (
+    <svg viewBox="0 0 64 64" className="fake-icon">
+      <rect x="8" y="8" width="48" height="48" rx="3" fill="none" stroke="#22c55e" strokeWidth="1.5" opacity="0.4"/>
+      <polyline points="12,32 18,20 24,44 30,24 36,40 42,18 48,36 52,28" fill="none" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.7"/>
+    </svg>
+  ),
+  target: (
+    <svg viewBox="0 0 64 64" className="fake-icon">
+      <circle cx="32" cy="32" r="18" fill="none" stroke="#ef4444" strokeWidth="2" opacity="0.6"/>
+      <circle cx="32" cy="32" r="10" fill="none" stroke="#ef4444" strokeWidth="1.5" opacity="0.5"/>
+      <circle cx="32" cy="32" r="3" fill="#ef4444" opacity="0.7"/>
+      <line x1="32" y1="8" x2="32" y2="18" stroke="#ef4444" strokeWidth="1.5" opacity="0.5"/>
+      <line x1="32" y1="46" x2="32" y2="56" stroke="#ef4444" strokeWidth="1.5" opacity="0.5"/>
+      <line x1="8" y1="32" x2="18" y2="32" stroke="#ef4444" strokeWidth="1.5" opacity="0.5"/>
+      <line x1="46" y1="32" x2="56" y2="32" stroke="#ef4444" strokeWidth="1.5" opacity="0.5"/>
+    </svg>
+  ),
+  cloud: (
+    <svg viewBox="0 0 64 64" className="fake-icon">
+      <path d="M20,40 Q14,40 14,32 Q14,24 22,24 Q24,16 34,16 Q44,16 46,24 Q54,24 54,32 Q54,40 48,40 Z" fill="none" stroke="#0ea5e9" strokeWidth="2" opacity="0.6"/>
+      <line x1="28" y1="44" x2="36" y2="44" stroke="#38bdf8" strokeWidth="2" opacity="0.5"/>
+      <line x1="30" y1="48" x2="34" y2="48" stroke="#38bdf8" strokeWidth="2" opacity="0.4"/>
+    </svg>
+  ),
+  code: (
+    <svg viewBox="0 0 64 64" className="fake-icon">
+      <rect x="10" y="10" width="44" height="44" rx="3" fill="none" stroke="#a855f7" strokeWidth="1.5" opacity="0.5"/>
+      <polyline points="24,24 16,32 24,40" fill="none" stroke="#a855f7" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <polyline points="40,24 48,32 40,40" fill="none" stroke="#a855f7" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <line x1="30" y1="42" x2="34" y2="22" stroke="#a855f7" strokeWidth="2" strokeLinecap="round"/>
+    </svg>
+  ),
+  wifi: (
+    <svg viewBox="0 0 64 64" className="fake-icon">
+      <path d="M16,28 Q32,16 48,28" fill="none" stroke="#0ea5e9" strokeWidth="2.5" opacity="0.6"/>
+      <path d="M22,36 Q32,28 42,36" fill="none" stroke="#0ea5e9" strokeWidth="2.5" opacity="0.5"/>
+      <path d="M28,44 Q32,40 36,44" fill="none" stroke="#0ea5e9" strokeWidth="2.5" opacity="0.4"/>
+      <circle cx="32" cy="50" r="3" fill="#0ea5e9" opacity="0.7"/>
+    </svg>
+  ),
+  key: (
+    <svg viewBox="0 0 64 64" className="fake-icon">
+      <circle cx="24" cy="32" r="10" fill="none" stroke="#f59e0b" strokeWidth="2.5" opacity="0.7"/>
+      <line x1="32" y1="32" x2="52" y2="32" stroke="#f59e0b" strokeWidth="3" opacity="0.7"/>
+      <line x1="42" y1="32" x2="42" y2="26" stroke="#f59e0b" strokeWidth="2.5" opacity="0.7"/>
+      <line x1="48" y1="32" x2="48" y2="26" stroke="#f59e0b" strokeWidth="2.5" opacity="0.7"/>
+    </svg>
+  ),
+  globe: (
+    <svg viewBox="0 0 64 64" className="fake-icon">
+      <circle cx="32" cy="32" r="20" fill="none" stroke="#0ea5e9" strokeWidth="2" opacity="0.5"/>
+      <ellipse cx="32" cy="32" rx="8" ry="20" fill="none" stroke="#0ea5e9" strokeWidth="1.2" opacity="0.4"/>
+      <line x1="12" y1="32" x2="52" y2="32" stroke="#0ea5e9" strokeWidth="1.2" opacity="0.4"/>
+      <path d="M16,20 Q32,28 48,20" fill="none" stroke="#0ea5e9" strokeWidth="1" opacity="0.3"/>
+      <path d="M16,44 Q32,36 48,44" fill="none" stroke="#0ea5e9" strokeWidth="1" opacity="0.3"/>
+    </svg>
+  ),
+  file: (
+    <svg viewBox="0 0 64 64" className="fake-icon">
+      <path d="M18,10 L38,10 L50,22 L50,54 L18,54 Z" fill="none" stroke="#94a3b8" strokeWidth="2" opacity="0.5"/>
+      <polyline points="38,10 38,22 50,22" fill="none" stroke="#94a3b8" strokeWidth="2" opacity="0.5"/>
+      <line x1="24" y1="32" x2="44" y2="32" stroke="#94a3b8" strokeWidth="1.5" opacity="0.4"/>
+      <line x1="24" y1="40" x2="40" y2="40" stroke="#94a3b8" strokeWidth="1.5" opacity="0.4"/>
     </svg>
   ),
 };
 
 const FAKE_KEYS = Object.keys(FakeIcons);
 
-/* ───────────── MAIN COMPONENT ───────────── */
+const formatTime = (seconds) => {
+  const m = Math.floor(seconds / 60).toString().padStart(2, "0");
+  const s = Math.floor(seconds % 60).toString().padStart(2, "0");
+  const ms = Math.floor((seconds % 1) * 100).toString().padStart(2, "0");
+  return `${m}:${s}.${ms}`;
+};
+
 export default function RudraGame() {
-  /* ---- state ---- */
-  const [phase, setPhase] = useState("menu"); // menu | playing | gameover
+  const [phase, setPhase] = useState("menu");
   const [difficulty, setDifficulty] = useState("casual");
   const [level, setLevel] = useState(1);
   const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(TOTAL_TIME);
+  const [timeLeft, setTimeLeft] = useState(DIFFICULTY.casual.time);
   const [combo, setCombo] = useState(0);
   const [bestCombo, setBestCombo] = useState(0);
   const [totalClicks, setTotalClicks] = useState(0);
@@ -151,39 +244,39 @@ export default function RudraGame() {
   const [grid, setGrid] = useState([]);
   const [realIdx, setRealIdx] = useState(0);
   const [glitchSet, setGlitchSet] = useState(new Set());
-  const [statusMsg, setStatusMsg] = useState("SYSTEM STANDBY");
-  const [flash, setFlash] = useState(null); // 'good' | 'bad' | null
+  const [flash, setFlash] = useState(null);
   const [levelFlash, setLevelFlash] = useState(false);
+  const [personalBest, setPersonalBest] = useState(() => {
+    const saved = localStorage.getItem("rudra_best");
+    return saved ? JSON.parse(saved) : { score: 0, diff: "casual" };
+  });
 
-  /* ---- refs ---- */
   const timerRef = useRef(null);
   const moveRef = useRef(null);
   const glitchRef = useRef(null);
   const comboRef = useRef(0);
-  const scoreRef = useRef(0);
-  const totalRef = useRef(0);
-  const correctRef = useRef(0);
-  const breachedRef = useRef(0);
   const levelRef = useRef(1);
-  const timeRef = useRef(TOTAL_TIME);
+  const timeRef = useRef(DIFFICULTY.casual.time);
 
-  /* keep refs in sync */
   useEffect(() => { comboRef.current = combo; }, [combo]);
-  useEffect(() => { scoreRef.current = score; }, [score]);
-  useEffect(() => { totalRef.current = totalClicks; }, [totalClicks]);
-  useEffect(() => { correctRef.current = correctClicks; }, [correctClicks]);
-  useEffect(() => { breachedRef.current = breached; }, [breached]);
   useEffect(() => { levelRef.current = level; }, [level]);
   useEffect(() => { timeRef.current = timeLeft; }, [timeLeft]);
 
-  /* ---- helpers ---- */
+  const diffConfig = DIFFICULTY[difficulty];
+
   const gridSize = useCallback(() => {
-    const base = DIFFICULTY[difficulty].gridBase;
+    const base = diffConfig.gridBase;
     const add = Math.min(2, Math.floor((levelRef.current - 1) / 3));
     return base + add;
-  }, [difficulty]);
+  }, [diffConfig]);
 
   const nodeCount = useCallback(() => gridSize() * gridSize(), [gridSize]);
+
+  const getMoveInterval = useCallback(() => {
+    const base = diffConfig.moveInterval || 3000;
+    const speedUp = Math.max(0.3, 1 - (levelRef.current - 1) * 0.08);
+    return Math.max(400, base * speedUp);
+  }, [diffConfig]);
 
   const buildGrid = useCallback(() => {
     const n = nodeCount();
@@ -200,18 +293,17 @@ export default function RudraGame() {
 
   const startGame = (diff) => {
     setDifficulty(diff);
+    const cfg = DIFFICULTY[diff];
     setLevel(1);
     setScore(0);
-    setTimeLeft(TOTAL_TIME);
+    setTimeLeft(cfg.time);
     setCombo(0);
     setBestCombo(0);
     setTotalClicks(0);
     setCorrectClicks(0);
     setBreached(0);
-    setStatusMsg("SYSTEM BREACH INITIATED");
-    setPhase("playing");
     setFlash(null);
-    // grid built in effect
+    setPhase("playing");
   };
 
   const endGame = useCallback(() => {
@@ -219,40 +311,43 @@ export default function RudraGame() {
     clearInterval(timerRef.current);
     clearInterval(moveRef.current);
     clearInterval(glitchRef.current);
-    setStatusMsg("CONNECTION TERMINATED");
-  }, []);
+    setPersonalBest((prev) => {
+      if (score > prev.score) {
+        const next = { score, diff: difficulty };
+        localStorage.setItem("rudra_best", JSON.stringify(next));
+        return next;
+      }
+      return prev;
+    });
+  }, [score, difficulty]);
 
-  /* ---- timer ---- */
   useEffect(() => {
     if (phase !== "playing") return;
     timerRef.current = setInterval(() => {
       setTimeLeft((t) => {
-        if (t <= 1) {
+        if (t <= 0.05) {
           clearInterval(timerRef.current);
           endGame();
           return 0;
         }
-        return t - 1;
+        return Math.max(0, t - 0.05);
       });
-    }, 1000);
+    }, 50);
     return () => clearInterval(timerRef.current);
   }, [phase, endGame]);
 
-  /* ---- build grid on level / start ---- */
   useEffect(() => {
     if (phase === "playing") buildGrid();
   }, [phase, level, buildGrid]);
 
-  /* ---- movement (levels 4-7) ---- */
   useEffect(() => {
     if (phase !== "playing") return;
     clearInterval(moveRef.current);
-    if (level >= 4 && level <= 7) {
-      const interval = DIFFICULTY[difficulty].moveInterval || 2000;
+    if (level >= 4) {
+      const interval = getMoveInterval();
       moveRef.current = setInterval(() => {
         setGrid((prev) => {
           const shuffled = [...prev].sort(() => Math.random() - 0.5);
-          // find where real went
           const newReal = shuffled.findIndex((n) => n.isReal);
           setRealIdx(newReal);
           return shuffled;
@@ -260,247 +355,349 @@ export default function RudraGame() {
       }, interval);
     }
     return () => clearInterval(moveRef.current);
-  }, [phase, level, difficulty]);
+  }, [phase, level, getMoveInterval]);
 
-  /* ---- glitch protocol (level 8+) ---- */
   useEffect(() => {
     if (phase !== "playing") return;
     clearInterval(glitchRef.current);
-    if (level >= 8) {
+    if (level >= 8 || (diffConfig.glitch && level >= 5)) {
+      const glitchSpeed = Math.max(400, 1200 - (level - 8) * 80);
       glitchRef.current = setInterval(() => {
         const n = nodeCount();
-        const count = Math.max(1, Math.floor(n * 0.25));
+        const pct = Math.min(0.5, 0.2 + (level - 8) * 0.03);
+        const count = Math.max(1, Math.floor(n * pct));
         const set = new Set();
         while (set.size < count) {
           const idx = Math.floor(Math.random() * n);
           if (idx !== realIdx) set.add(idx);
         }
         setGlitchSet(set);
-        setTimeout(() => setGlitchSet(new Set()), 600);
-      }, 1200);
+        setTimeout(() => setGlitchSet(new Set()), Math.max(300, 700 - (level - 8) * 30));
+      }, glitchSpeed);
     }
     return () => clearInterval(glitchRef.current);
-  }, [phase, level, realIdx, nodeCount]);
+  }, [phase, level, realIdx, nodeCount, diffConfig.glitch]);
 
-  /* ---- click handler ---- */
   const handleNodeClick = (idx) => {
     if (phase !== "playing") return;
     setTotalClicks((t) => t + 1);
-    totalRef.current += 1;
 
     if (idx === realIdx) {
-      // CORRECT
       const newCombo = comboRef.current + 1;
       setCombo(newCombo);
-      comboRef.current = newCombo;
       if (newCombo > bestCombo) setBestCombo(newCombo);
-      const pts = 10 * newCombo;
+      const pts = Math.round(10 * newCombo * diffConfig.scoreMult);
       setScore((s) => s + pts);
       setCorrectClicks((c) => c + 1);
       setBreached((b) => b + 1);
-      setStatusMsg(`NODE BREACHED — +${pts} PTS`);
       setFlash("good");
-      setTimeout(() => setFlash(null), 300);
+      setTimeout(() => setFlash(null), 250);
 
       if (levelRef.current >= MAX_LEVELS) {
         endGame();
         return;
       }
       setLevelFlash(true);
-      setTimeout(() => setLevelFlash(false), 400);
+      setTimeout(() => setLevelFlash(false), 350);
       setLevel((lv) => lv + 1);
     } else {
-      // WRONG
       setCombo(0);
       comboRef.current = 0;
       setScore((s) => Math.max(0, s - 5));
       setTimeLeft((t) => Math.max(0, t - 3));
-      setStatusMsg("FAKE NODE DETECTED — PENALTY APPLIED");
       setFlash("bad");
-      setTimeout(() => setFlash(null), 300);
+      setTimeout(() => setFlash(null), 250);
     }
   };
 
-  /* ---- accuracy ---- */
   const accuracy = totalClicks > 0 ? Math.round((correctClicks / totalClicks) * 100) : 0;
+  const elapsed = diffConfig.time - timeLeft;
+  const cpuLoad = Math.min(100, Math.round((elapsed / diffConfig.time) * 100));
+  const threatLevel = Math.min(100, Math.round((level / MAX_LEVELS) * 100));
+  const latency = Math.min(100, Math.round(5 + level * 3.5));
 
-  /* ---- render helpers ---- */
-  const getStatusColor = () => {
-    if (timeLeft <= 10) return "status-critical";
-    if (level >= 8) return "status-glitch";
-    if (level >= 4) return "status-alert";
-    return "status-normal";
-  };
-
-  /* ───────────── RENDER ───────────── */
   return (
-    <div className={`rudra-container ${flash || ""} ${levelFlash ? "level-up" : ""}`}>
-      {/* ===== MENU ===== */}
+    <div className={`rudra-game ${flash || ""} ${levelFlash ? "level-up" : ""}`}>
       {phase === "menu" && (
-        <div className="menu-screen">
-          <div className="menu-card">
-            <div className="menu-logo-wrap">
-              <RudraLogo />
+        <div className="rg-menu">
+          <div className="rg-top-bar">
+            <span className="rg-security-badge">🔒 SECURITY CLEARANCE LEVEL 00</span>
+          </div>
+
+          <h1 className="rg-main-title">DATA NODE BREACH</h1>
+          <p className="rg-sub-title">// RUDRA PROTOCOL //</p>
+
+          <div className="rg-menu-body">
+            <div className="rg-panel rg-left-panel">
+              <div className="rg-panel-header">TARGET SPECIFICATION</div>
+              <div className="rg-logo-box">
+                <RudraLogo />
+              </div>
+              <div className="rg-logo-label">RUDRA EMBLEM OBJECTIVE</div>
+
+              <div className="rg-guide">
+                <div className="rg-guide-title">🎯 RECOGNITION GUIDE:</div>
+                <ul>
+                  <li>3D Isometric Bar Chart on diamond platform</li>
+                  <li>White/Blue zigzag Trend Arrow pointing up-right</li>
+                  <li>Bold blue "RUDRA" title text</li>
+                  <li>Full subtitle: "RESOURCEFUL UNIT FOR DATA RESEARCH AND ANALYTICS"</li>
+                </ul>
+              </div>
             </div>
-            <h1 className="menu-title">RUDRA PROTOCOL</h1>
-            <p className="menu-subtitle">Resourceful Unit for Data Research and Analytics</p>
-            <div className="menu-separator" />
-            <p className="menu-desc">
-              The RUDRA network has been infiltrated with fake data nodes.
-              Identify and breach the authentic node before the system timer expires.
-            </p>
-            <div className="difficulty-grid">
-              {Object.entries(DIFFICULTY).map(([key, cfg]) => (
-                <button
-                  key={key}
-                  className={`diff-btn ${difficulty === key ? "active" : ""}`}
-                  onClick={() => setDifficulty(key)}
+
+            <div className="rg-panel rg-right-panel">
+              <div className="rg-panel-header">🛡 SELECT BREACH DIFFICULTY</div>
+
+              <div className="rg-diff-list">
+                {Object.entries(DIFFICULTY).map(([key, cfg]) => (
+                  <button
+                    key={key}
+                    className={`rg-diff-card ${difficulty === key ? "active" : ""}`}
+                    onClick={() => setDifficulty(key)}
+                  >
+                    <div className="rg-diff-top">
+                      <span className="rg-diff-name">{cfg.name}</span>
+                      <span className="rg-diff-grid">{cfg.gridBase}×{cfg.gridBase} GRID</span>
+                    </div>
+                    <div className="rg-diff-mid">
+                      <span className="rg-diff-desc">
+                        {key === "casual" && "Static grid layout with " + (cfg.gridBase*cfg.gridBase) + " nodes. Ideal for initial data research."}
+                        {key === "analyst" && (cfg.gridBase*cfg.gridBase) + " data nodes. Positions swap dynamically with glowing decoy accents."}
+                        {key === "cyber" && (cfg.gridBase*cfg.gridBase) + " data nodes with rapid node shifting and decoy glitch mimics."}
+                      </span>
+                      <div className="rg-diff-stats">
+                        <span className="rg-stat-mult">{cfg.scoreMult}x SCORE</span>
+                        <span className="rg-stat-time">{cfg.time}s TIMER</span>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              <div className="rg-personal-best">
+                <span>🏆 PERSONAL BEST</span>
+                <span className="rg-best-score">
+                  {personalBest.score.toLocaleString()} PTS
+                  <span className="rg-best-diff">({personalBest.diff.toUpperCase()})</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <button className="rg-initiate-btn" onClick={() => startGame(difficulty)}>
+            <span className="rg-play-icon">▶</span>
+            <span>INITIATE SYSTEM BREACH</span>
+          </button>
+        </div>
+      )}
+
+      {phase === "playing" && (
+        <div className="rg-play">
+          <div className="rg-play-top">
+            <div className="rg-play-title">Data Node Breach: RUDRA Protocol</div>
+            <div className="rg-play-meta">
+              <span className="rg-meta-badge">⚡ Remote</span>
+              <span className="rg-meta-badge">💻 Desktop</span>
+            </div>
+          </div>
+
+          <div className="rg-play-body">
+            <div className="rg-side-panel rg-scan-panel">
+              <div className="rg-side-header">SECTOR SCANNER</div>
+              <div className="rg-radar">
+                <div className="rg-radar-ring rg-r1" />
+                <div className="rg-radar-ring rg-r2" />
+                <div className="rg-radar-ring rg-r3" />
+                <div className="rg-radar-sweep" />
+                <div className="rg-radar-dot" style={{ top: "30%", left: "25%" }} />
+                <div className="rg-radar-dot" style={{ top: "60%", left: "70%", animationDelay: "1s" }} />
+                <div className="rg-radar-dot" style={{ top: "45%", left: "50%", animationDelay: "2s" }} />
+              </div>
+
+              <div className="rg-terminal">
+                <div className="rg-term-line">
+                  <span className="rg-term-arrow">➤</span> INITIATING_BREACH...
+                </div>
+                <div className="rg-term-line">
+                  <span className="rg-term-arrow">➤</span> NODE_SIGNATURES: {nodeCount()}
+                </div>
+                <div className="rg-term-line">
+                  <span className="rg-term-arrow">➤</span> NODE_STABILITY: {(100 - threatLevel * 0.6).toFixed(1)}%
+                </div>
+                <div className="rg-term-line rg-term-highlight">
+                  <span className="rg-term-arrow">➤</span> TARGET_ACQUIRED: RUDRA_0{level}
+                </div>
+              </div>
+            </div>
+
+            <div className="rg-center-area">
+              <div className="rg-grid-frame">
+                <div className="rg-grid-labels">
+                  {Array.from({ length: gridSize() }, (_, i) => (
+                    <span key={i} className="rg-grid-label">NODE_{(i + 1).toString().padStart(2, "0")}</span>
+                  ))}
+                </div>
+                <main
+                  className="rg-grid"
+                  style={{ gridTemplateColumns: `repeat(${gridSize()}, 1fr)` }}
                 >
-                  <span className="diff-name">{cfg.name}</span>
-                  <span className="diff-meta">
-                    Grid {cfg.gridBase}×{cfg.gridBase}
-                    {cfg.moveInterval ? " • Moving" : " • Static"}
-                    {cfg.glitch ? " • Glitch" : ""}
-                  </span>
-                </button>
-              ))}
+                  {grid.map((node, idx) => {
+                    const isGlitch = glitchSet.has(idx);
+                    return (
+                      <button
+                        key={`${level}-${node.id}-${idx}`}
+                        className={`rg-node ${node.isReal ? "rg-real" : ""} ${isGlitch ? "rg-glitch" : ""}`}
+                        onClick={() => handleNodeClick(idx)}
+                        style={{ animationDelay: `${idx * 30}ms` }}
+                      >
+                        <div className="rg-node-glow" />
+                        <div className="rg-node-content">
+                          {node.isReal || isGlitch ? (
+                            <RudraLogo className={isGlitch ? "rg-glitch-logo" : ""} />
+                          ) : (
+                            <>
+                              {FakeIcons[node.icon]}
+                              <span className="rg-node-caption">
+                                {node.icon === "systemAlert" && "SYSTEM ALERT"}
+                                {node.icon === "financialFeed" && "FINANCIAL FEED"}
+                                {node.icon === "bandwidthLoss" && "BANDWIDTH LOSS"}
+                                {node.icon === "cpuLoad" && "CPU LOAD"}
+                                {node.icon === "shield" && "FIREWALL"}
+                                {node.icon === "lock" && "ENCRYPTED"}
+                                {node.icon === "database" && "DATABASE"}
+                                {node.icon === "network" && "NETWORK"}
+                                {node.icon === "fingerprint" && "BIOMETRIC"}
+                                {node.icon === "bug" && "MALWARE"}
+                                {node.icon === "pieChart" && "ANALYTICS"}
+                                {node.icon === "waveform" && "SIGNAL"}
+                                {node.icon === "target" && "THREAT"}
+                                {node.icon === "cloud" && "CLOUD"}
+                                {node.icon === "code" && "SOURCE"}
+                                {node.icon === "wifi" && "WIRELESS"}
+                                {node.icon === "key" && "ACCESS KEY"}
+                                {node.icon === "globe" && "GLOBAL"}
+                                {node.icon === "file" && "DOCUMENT"}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                        <div className="rg-node-border" />
+                      </button>
+                    );
+                  })}
+                </main>
+              </div>
             </div>
-            <button className="initiate-btn" onClick={() => startGame(difficulty)}>
-              <span className="initiate-text">INITIATE SYSTEM BREACH</span>
-              <span className="initiate-glow" />
-            </button>
+
+            <div className="rg-side-panel rg-perf-panel">
+              <div className="rg-side-header">ANALYST PERFORMANCE</div>
+
+              <div className="rg-perf-big">
+                <div className="rg-perf-number">{accuracy.toFixed(1)}%</div>
+                <div className="rg-perf-label">THREAT ACCURACY</div>
+              </div>
+
+              <div className="rg-perf-bars">
+                <div className="rg-bar-row">
+                  <span className="rg-bar-label">CPU_LOAD</span>
+                  <div className="rg-bar-track">
+                    <div className="rg-bar-fill" style={{ width: `${cpuLoad}%`, background: cpuLoad > 80 ? "#ef4444" : cpuLoad > 50 ? "#f59e0b" : "#0ea5e9" }} />
+                  </div>
+                  <span className="rg-bar-val">{cpuLoad >= 95 ? "CRITICAL" : cpuLoad >= 70 ? "HIGH" : "OPTIMAL"}</span>
+                </div>
+                <div className="rg-bar-row">
+                  <span className="rg-bar-label">LATENCY</span>
+                  <div className="rg-bar-track">
+                    <div className="rg-bar-fill rg-bar-cyan" style={{ width: `${latency}%` }} />
+                  </div>
+                  <span className="rg-bar-val">{latency}ms</span>
+                </div>
+                <div className="rg-bar-row">
+                  <span className="rg-bar-label">THREAT_LEVEL</span>
+                  <div className="rg-bar-track">
+                    <div className="rg-bar-fill rg-bar-red" style={{ width: `${threatLevel}%` }} />
+                  </div>
+                  <span className="rg-bar-val">{threatLevel >= 80 ? "EXTREME" : threatLevel >= 50 ? "ELEVATED" : "LOW"}</span>
+                </div>
+              </div>
+
+              <div className="rg-perf-stats">
+                <div className="rg-stat-box">
+                  <span className="rg-stat-label">SCORE</span>
+                  <span className="rg-stat-num">{score.toLocaleString()}</span>
+                </div>
+                <div className="rg-stat-box">
+                  <span className="rg-stat-label">COMBO</span>
+                  <span className={`rg-stat-num ${combo >= 3 ? "hot" : ""}`}>×{combo + 1}</span>
+                </div>
+                <div className="rg-stat-box">
+                  <span className="rg-stat-label">LEVEL</span>
+                  <span className="rg-stat-num">{level}</span>
+                </div>
+                <div className="rg-stat-box">
+                  <span className="rg-stat-label">BREACHED</span>
+                  <span className="rg-stat-num">{breached}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rg-play-bottom">
+            <span className="rg-status-text">BREACH_STATUS: {level >= 8 ? "CRITICAL" : level >= 4 ? "ENGAGING" : "SCANNING"}</span>
+            <span className={`rg-timer ${timeLeft <= 10 ? "critical" : ""}`}>
+              {formatTime(timeLeft)}
+            </span>
           </div>
         </div>
       )}
 
-      {/* ===== PLAYING ===== */}
-      {phase === "playing" && (
-        <>
-          {/* HUD */}
-          <header className="hud">
-            <div className="hud-left">
-              <div className="hud-item">
-                <span className="hud-label">LEVEL</span>
-                <span className="hud-value">{level}</span>
-              </div>
-              <div className="hud-item">
-                <span className="hud-label">SCORE</span>
-                <span className="hud-value">{score}</span>
-              </div>
-              <div className="hud-item">
-                <span className="hud-label">COMBO</span>
-                <span className={`hud-value combo ${combo >= 3 ? "combo-hot" : ""}`}>×{combo + 1}</span>
-              </div>
-            </div>
-            <div className="hud-center">
-              <div className={`timer-ring ${timeLeft <= 10 ? "timer-critical" : ""}`}>
-                <span className="timer-value">{timeLeft}</span>
-                <span className="timer-label">SEC</span>
-              </div>
-            </div>
-            <div className="hud-right">
-              <div className="hud-item">
-                <span className="hud-label">ACCURACY</span>
-                <span className="hud-value">{accuracy}%</span>
-              </div>
-              <div className="hud-item">
-                <span className="hud-label">BREACHED</span>
-                <span className="hud-value">{breached}</span>
-              </div>
-              <div className="hud-item">
-                <span className="hud-label">STATUS</span>
-                <span className={`hud-value status ${getStatusColor()}`}>{statusMsg}</span>
-              </div>
-            </div>
-          </header>
-
-          {/* RADAR BAR */}
-          <div className="radar-bar">
-            <div className="radar-line" />
-            <span className="radar-text">RADAR SCANNER ACTIVE</span>
-            <div className="radar-line" />
-          </div>
-
-          {/* GRID */}
-          <main
-            className="game-grid"
-            style={{
-              gridTemplateColumns: `repeat(${gridSize()}, 1fr)`,
-            }}
-          >
-            {grid.map((node, idx) => {
-              const isGlitch = glitchSet.has(idx);
-              return (
-                <button
-                  key={`${level}-${node.id}`}
-                  className={`data-node ${node.isReal ? "real-node" : ""} ${isGlitch ? "glitch-node" : ""}`}
-                  onClick={() => handleNodeClick(idx)}
-                  style={{ animationDelay: `${idx * 40}ms` }}
-                >
-                  <div className="node-inner">
-                    {node.isReal || isGlitch ? (
-                      <RudraLogo className={isGlitch ? "glitch-logo" : ""} />
-                    ) : (
-                      FakeIcons[node.icon]
-                    )}
-                  </div>
-                  <div className="node-scanline" />
-                  <div className="node-corner tl" />
-                  <div className="node-corner tr" />
-                  <div className="node-corner bl" />
-                  <div className="node-corner br" />
-                </button>
-              );
-            })}
-          </main>
-
-          {/* LEVEL INDICATOR */}
-          <div className="level-badge">
-            {level >= 8 && <span className="badge glitch-badge">⚠ GLITCH PROTOCOL</span>}
-            {level >= 4 && level < 8 && <span className="badge move-badge">◈ NODES UNSTABLE</span>}
-            {level < 4 && <span className="badge calm-badge">◉ STATIC FIELD</span>}
-          </div>
-        </>
-      )}
-
-      {/* ===== GAME OVER ===== */}
       {phase === "gameover" && (
-        <div className="menu-screen">
-          <div className="menu-card report-card">
-            <h2 className="report-title">MISSION REPORT</h2>
-            <div className="report-separator" />
-            <div className="report-grid">
-              <div className="report-item">
-                <span className="report-label">FINAL SCORE</span>
-                <span className="report-value">{score}</span>
+        <div className="rg-menu">
+          <div className="rg-top-bar">
+            <span className="rg-security-badge">🔒 SECURITY CLEARANCE LEVEL 00</span>
+          </div>
+
+          <h1 className="rg-main-title">MISSION REPORT</h1>
+          <p className="rg-sub-title">// RUDRA PROTOCOL //</p>
+
+          <div className="rg-report-card">
+            <div className="rg-report-grid">
+              <div className="rg-report-item">
+                <span className="rg-r-label">FINAL SCORE</span>
+                <span className="rg-r-value">{score.toLocaleString()}</span>
               </div>
-              <div className="report-item">
-                <span className="report-label">ACCURACY</span>
-                <span className="report-value">{accuracy}%</span>
+              <div className="rg-report-item">
+                <span className="rg-r-label">ACCURACY</span>
+                <span className="rg-r-value">{accuracy}%</span>
               </div>
-              <div className="report-item">
-                <span className="report-label">NODES BREACHED</span>
-                <span className="report-value">{breached}</span>
+              <div className="rg-report-item">
+                <span className="rg-r-label">NODES BREACHED</span>
+                <span className="rg-r-value">{breached}</span>
               </div>
-              <div className="report-item">
-                <span className="report-label">HIGHEST COMBO</span>
-                <span className="report-value">×{bestCombo + 1}</span>
+              <div className="rg-report-item">
+                <span className="rg-r-label">HIGHEST COMBO</span>
+                <span className="rg-r-value">×{bestCombo + 1}</span>
               </div>
-              <div className="report-item">
-                <span className="report-label">HIGHEST LEVEL</span>
-                <span className="report-value">{level}</span>
+              <div className="rg-report-item">
+                <span className="rg-r-label">MAX LEVEL</span>
+                <span className="rg-r-value">{level}</span>
               </div>
-              <div className="report-item">
-                <span className="report-label">DIFFICULTY</span>
-                <span className="report-value">{DIFFICULTY[difficulty].name}</span>
+              <div className="rg-report-item">
+                <span className="rg-r-label">DIFFICULTY</span>
+                <span className="rg-r-value">{diffConfig.name.toUpperCase()}</span>
               </div>
             </div>
-            <div className="report-grade">
-              {accuracy >= 90 ? "S" : accuracy >= 75 ? "A" : accuracy >= 50 ? "B" : accuracy >= 30 ? "C" : "D"}
+
+            <div className="rg-grade-wrap">
+              <div className={`rg-grade ${accuracy >= 90 ? "grade-s" : accuracy >= 75 ? "grade-a" : accuracy >= 50 ? "grade-b" : accuracy >= 30 ? "grade-c" : "grade-d"}`}>
+                {accuracy >= 90 ? "S" : accuracy >= 75 ? "A" : accuracy >= 50 ? "B" : accuracy >= 30 ? "C" : "D"}
+              </div>
             </div>
-            <button className="initiate-btn reboot" onClick={() => setPhase("menu")}>
-              <span className="initiate-text">REBOOT SYSTEM</span>
-              <span className="initiate-glow" />
+
+            <button className="rg-initiate-btn reboot" onClick={() => setPhase("menu")}>
+              <span className="rg-play-icon">↻</span>
+              <span>REBOOT SYSTEM</span>
             </button>
           </div>
         </div>
