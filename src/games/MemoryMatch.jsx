@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import confetti from "canvas-confetti";
 import VictoryModal from "./VictoryModal";
 import "./MemoryMatch.css";
+import { saveScore } from "../services/leaderboardService";
 
 const EMOJIS = ["🧠", "🚀", "🎮", "⚡", "💎", "🌙", "🎧", "🍎"];
 const STARTING_SCORE = 1000;
@@ -180,8 +181,15 @@ function MemoryMatch() {
         matchTimeoutRef.current = null;
 
         if (hasWon) {
-          setShowVictory(true);
-        }
+  const finalScore = calculateScore(nextMoves, time);
+
+  const player =
+    localStorage.getItem("playerName") || "Anonymous";
+
+  saveScore(player, "memoryMatch", finalScore);
+
+  setShowVictory(true);
+}
       },
       isMatch ? 400 : 800,
     );

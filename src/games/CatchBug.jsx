@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './CatchBug.css';
+import { saveScore } from "../services/leaderboardService";
 
 /* ==================== AUDIO ENGINE ==================== */
 const AudioEngine = {
@@ -240,19 +241,28 @@ export default function CatchTheBug() {
 
   /* ---- Game Over ---- */
   const handleGameOver = useCallback(() => {
-    setGameState('gameover');
-    clearAllTimers();
-    AudioEngine.gameOver();
+  setGameState("gameover");
+  clearAllTimers();
+  AudioEngine.gameOver();
 
-    setScore(finalScore => {
-      const hs = parseInt(localStorage.getItem(HIGH_SCORE_KEY)) || 0;
-      if (finalScore > hs) {
-        localStorage.setItem(HIGH_SCORE_KEY, finalScore);
-        setHighScore(finalScore);
-      }
-      return finalScore;
-    });
-  }, []);
+  setScore((finalScore) => {
+
+    const player =
+      localStorage.getItem("playerName") || "Anonymous";
+
+    saveScore(player, "catchBug", finalScore);
+
+    const hs = parseInt(localStorage.getItem(HIGH_SCORE_KEY)) || 0;
+
+    if (finalScore > hs) {
+      localStorage.setItem(HIGH_SCORE_KEY, finalScore);
+      setHighScore(finalScore);
+    }
+
+    return finalScore;
+  });
+
+}, []);
 
   /* ---- Click Handlers ---- */
   const handleBugClick = useCallback((e, bug) => {

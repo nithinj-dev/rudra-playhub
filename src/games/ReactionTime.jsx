@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import "./ReactionTime.css";
+import { saveScore } from "../services/leaderboardService";
 
 function ReactionTime() {
   const playerName = localStorage.getItem("playerName") || "Player";
@@ -39,7 +40,14 @@ function ReactionTime() {
 
     if (gameState === "ready") {
       const time = Date.now() - startTime.current;
+      const player = localStorage.getItem("playerName") || "Anonymous";
+      const reactionScore = Math.max(1000 - time * 2, 100);
 
+saveScore(
+    player,
+    "reactionTime",
+    reactionScore
+);
       setReactionTime(time);
 
       if (!bestTime || time < bestTime) {
