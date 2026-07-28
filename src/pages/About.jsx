@@ -1,113 +1,6 @@
 import React from 'react';
 import './About.css';
-
-const RudraLogo = () => (
-  <svg viewBox="0 0 200 200" className="rudra-about-logo">
-    <defs>
-      <linearGradient id="aboutBorder" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#0ea5e9" />
-        <stop offset="50%" stopColor="#0284c7" />
-        <stop offset="100%" stopColor="#0ea5e9" />
-      </linearGradient>
-      <filter id="aboutGlow">
-        <feGaussianBlur stdDeviation="2" result="blur" />
-        <feMerge>
-          <feMergeNode in="blur" />
-          <feMergeNode in="SourceGraphic" />
-        </feMerge>
-      </filter>
-    </defs>
-
-    {/* Outer ring */}
-    <circle cx="100" cy="100" r="96" fill="none" stroke="url(#aboutBorder)" strokeWidth="10" />
-    <circle cx="100" cy="100" r="91" fill="#0a0a0a" />
-
-    {/* Decorative ring dots */}
-    <circle cx="100" cy="6" r="7" fill="#0ea5e9" />
-    <circle cx="100" cy="194" r="7" fill="#0ea5e9" opacity="0.3" />
-    <circle cx="6" cy="100" r="5" fill="#0ea5e9" opacity="0.5" />
-    <circle cx="194" cy="100" r="5" fill="#0ea5e9" opacity="0.5" />
-
-    {/* 3D Isometric Bars on diamond platform */}
-    <g transform="translate(42,68)">
-      {/* Platform base */}
-      <polygon points="0,30 58,0 116,30 58,60" fill="#1e293b" stroke="#334155" strokeWidth="0.5" opacity="0.6" />
-      <polygon points="0,30 58,60 58,68 0,38" fill="#0f172a" opacity="0.8" />
-      <polygon points="58,60 116,30 116,38 58,68" fill="#1e293b" opacity="0.9" />
-
-      {/* Bar 1 */}
-      <rect x="6" y="42" width="18" height="28" fill="#0ea5e9" stroke="#0284c7" strokeWidth="0.8" />
-      <rect x="6" y="42" width="18" height="7" fill="#38bdf8" />
-      {/* Bar 2 */}
-      <rect x="30" y="22" width="18" height="48" fill="#0ea5e9" stroke="#0284c7" strokeWidth="0.8" />
-      <rect x="30" y="22" width="18" height="7" fill="#38bdf8" />
-      {/* Bar 3 */}
-      <rect x="54" y="32" width="18" height="38" fill="#0ea5e9" stroke="#0284c7" strokeWidth="0.8" />
-      <rect x="54" y="32" width="18" height="7" fill="#38bdf8" />
-      {/* Bar 4 */}
-      <rect x="78" y="12" width="18" height="58" fill="#0ea5e9" stroke="#0284c7" strokeWidth="0.8" />
-      <rect x="78" y="12" width="18" height="7" fill="#38bdf8" />
-    </g>
-
-    {/* White zigzag trend arrow pointing up-right */}
-    <polyline
-      points="52,118 78,98 102,108 128,78 152,58"
-      fill="none"
-      stroke="white"
-      strokeWidth="4"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      filter="url(#aboutGlow)"
-    />
-    <polygon points="152,58 142,62 144,72" fill="white" />
-
-    {/* RUDRA Title */}
-    <text
-      x="100"
-      y="158"
-      textAnchor="middle"
-      fill="#38bdf8"
-      fontSize="28"
-      fontWeight="900"
-      fontFamily="'Segoe UI', system-ui, sans-serif"
-      letterSpacing="4"
-      filter="url(#aboutGlow)"
-    >
-      RUDRA
-    </text>
-
-    {/* Subtitle */}
-    <text
-      x="100"
-      y="172"
-      textAnchor="middle"
-      fill="#64748b"
-      fontSize="6.5"
-      fontWeight="600"
-      fontFamily="'Segoe UI', system-ui, sans-serif"
-      letterSpacing="0.8"
-    >
-      RESOURCEFUL UNIT FOR DATA RESEARCH
-    </text>
-    <text
-      x="100"
-      y="180"
-      textAnchor="middle"
-      fill="#64748b"
-      fontSize="6.5"
-      fontWeight="600"
-      fontFamily="'Segoe UI', system-ui, sans-serif"
-      letterSpacing="0.8"
-    >
-      AND ANALYTICS
-    </text>
-
-    {/* Small trend arrow bottom right */}
-    <polyline points="132,178 158,158 188,138" fill="none" stroke="#0ea5e9" strokeWidth="2" opacity="0.5" />
-    <polygon points="188,138 180,142 182,150" fill="#0ea5e9" opacity="0.5" />
-  </svg>
-);
-
+import rudraLogo from "../assets/rudra-logo.png";
 const About = () => {
   return (
     <section className="about-section">
@@ -116,7 +9,30 @@ const About = () => {
         <div className="logo-wrapper">
           <div className="logo-ring">
             <div className="logo-inner">
-              <RudraLogo />
+              <svg
+                viewBox="0 0 64 64"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="logo-icon"
+              >
+                <path
+                  d="M8 52 L20 36 L28 44 L40 24 L56 8"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M44 8 L56 8 L56 20"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <rect x="4" y="48" width="56" height="4" rx="2" fill="currentColor" />
+              </svg>
+              <span className="logo-text">RUDRA</span>
+              <span className="logo-subtext">Resourceful Unit for Data Research and Analytics</span>
             </div>
           </div>
         </div>
