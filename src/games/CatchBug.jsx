@@ -64,7 +64,7 @@ export default function CatchTheBug() {
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(DURATION);
   const [level, setLevel] = useState(1);
-  const [spawnInterval, setSpawnInterval] = useState(800);
+  const [spawnInterval, setSpawnInterval] = useState(1500);
   const [bugs, setBugs] = useState([]);
   const [particles, setParticles] = useState([]);
   const [popups, setPopups] = useState([]);
@@ -79,7 +79,7 @@ export default function CatchTheBug() {
   const gameAreaRef = useRef(null);
   const bugIdRef = useRef(0);
   const timersRef = useRef([]);
-  const bugLifetimeRef = useRef(1000);
+  const bugLifetimeRef = useRef(2000);
   const gameStateRef = useRef('menu');
   const levelRef = useRef(1);
 
@@ -117,7 +117,7 @@ export default function CatchTheBug() {
     setTimeLeft(DURATION);
     setLevel(1);
     levelRef.current = 1;
-    setSpawnInterval(800);
+    setSpawnInterval(1500);
     setBugs([]);
     setParticles([]);
     setPopups([]);
@@ -125,7 +125,7 @@ export default function CatchTheBug() {
     setShake(false);
     setFlash(false);
     setDiffWarning(false);
-    bugLifetimeRef.current = 1000;
+    bugLifetimeRef.current = 2000;
     bugIdRef.current = 0;
     setGameState('countdown');
   }, []);
@@ -159,13 +159,15 @@ export default function CatchTheBug() {
       setTimeLeft(prev => {
         const next = Math.max(0, prev - 0.1);
         const elapsed = DURATION - next;
-        const nextLevel = Math.min(4, Math.floor(elapsed / 15) + 1);
+        // Level up every 20 seconds instead of 15 (slower ramp)
+        const nextLevel = Math.min(4, Math.floor(elapsed / 20) + 1);
 
         if (nextLevel > levelRef.current) {
           setLevel(nextLevel);
           levelRef.current = nextLevel;
-          setSpawnInterval(Math.max(300, 800 - (nextLevel - 1) * 150));
-          bugLifetimeRef.current = Math.max(600, 1000 - (nextLevel - 1) * 100);
+          // Slower spawn interval decrease
+          setSpawnInterval(Math.max(700, 1500 - (nextLevel - 1) * 200));
+          bugLifetimeRef.current = Math.max(1200, 2000 - (nextLevel - 1) * 200);
           setDiffWarning(true);
           AudioEngine.levelUp();
           addTimer(() => setDiffWarning(false), 2000);
@@ -206,13 +208,13 @@ export default function CatchTheBug() {
         setBugs(prev => prev.filter(b => b.id !== id));
       }, bugLifetimeRef.current);
 
-      // Multi-spawn at higher levels
+      // Multi-spawn at higher levels (less frequent)
       const lvl = levelRef.current;
-      if (lvl >= 3 && Math.random() > 0.6) {
-        addTimer(() => spawnSingleBug(), 100);
+      if (lvl >= 3 && Math.random() > 0.75) {
+        addTimer(() => spawnSingleBug(), 150);
       }
-      if (lvl >= 4 && Math.random() > 0.7) {
-        addTimer(() => spawnSingleBug(), 200);
+      if (lvl >= 4 && Math.random() > 0.85) {
+        addTimer(() => spawnSingleBug(), 300);
       }
     };
 
@@ -361,8 +363,8 @@ export default function CatchTheBug() {
           <div className="ctb-rules">
             <h3>🎮 How to Play</h3>
             <div className="ctb-rule"><span>⏱️</span> You have 60 seconds</div>
-            <div className="ctb-rule"><span>🐞</span> Bugs appear randomly & disappear after 1s</div>
-            <div className="ctb-rule"><span>📈</span> Difficulty increases every 15 seconds</div>
+            <div className="ctb-rule"><span>🐞</span> Bugs appear randomly & disappear after 2 seconds</div>
+            <div className="ctb-rule"><span>📈</span> Difficulty increases every 20 seconds</div>
             <div className="ctb-rule"><span>✅</span> Catch bug: <strong style={{ color: '#39ff14' }}>+10 pts</strong></div>
             <div className="ctb-rule"><span>❌</span> Miss click: <strong style={{ color: '#ff073a' }}>-5 pts</strong></div>
           </div>
