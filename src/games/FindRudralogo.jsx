@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import "./RudraGame.css";
+import "./FindRudralogo.css";
 
 const MAX_LEVELS = 20;
 
