@@ -1,5 +1,5 @@
 import React from 'react';
-import './RudraAbout.css';
+import './About.css';
 
 const RudraAbout = () => {
   return (
