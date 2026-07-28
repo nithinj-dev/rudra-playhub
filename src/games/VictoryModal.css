@@ -1,0 +1,157 @@
+/* File: VictoryModal.css */
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Rajdhani:wght@400;600;700&display=swap");
+
+.victory-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  padding: 20px;
+  animation: fadeIn 0.4s ease;
+}
+
+.victory-card {
+  width: min(520px, 100%);
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  background: rgba(18, 25, 40, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 40px;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(0, 245, 255, 0.25);
+  animation: popup 0.4s ease;
+}
+
+.trophy {
+  font-size: 70px;
+  margin-bottom: 15px;
+}
+
+.victory-card h1 {
+  font-family: "Orbitron", sans-serif;
+  font-size: 42px;
+  color: #66ff4d;
+  margin-bottom: 15px;
+  text-shadow: 0 0 18px #66ff4d;
+}
+
+.stars {
+  font-size: 34px;
+  margin-bottom: 30px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 35px;
+}
+
+.stat-box {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 20px 12px;
+}
+
+.stat-box span {
+  display: block;
+  color: #9ca3af;
+  margin-bottom: 10px;
+}
+
+.stat-box h2 {
+  font-family: "Orbitron", sans-serif;
+  color: #00f5ff;
+}
+
+.buttons {
+  display: flex;
+  gap: 18px;
+}
+
+.buttons button {
+  flex: 1;
+  padding: 15px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 17px;
+  font-family: "Orbitron", sans-serif;
+  transition: 0.3s;
+}
+
+.play-again {
+  background: linear-gradient(90deg, #66ff4d, #00f5ff);
+  color: white;
+}
+
+.game-hub {
+  background: #1f2937;
+  color: white;
+}
+
+.buttons button:hover,
+.buttons button:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: 0 0 20px rgba(0, 245, 255, 0.35);
+}
+
+.buttons button:focus-visible {
+  outline: 2px solid #66ff4d;
+  outline-offset: 3px;
+}
+
+@keyframes popup {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 600px) {
+  .victory-card {
+    padding: 25px;
+  }
+
+  .trophy {
+    font-size: 56px;
+  }
+
+  .victory-card h1 {
+    font-size: 34px;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .stat-box {
+    padding: 14px;
+  }
+
+  .buttons {
+    flex-direction: column;
+  }
+}

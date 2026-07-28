@@ -1,0 +1,343 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Rajdhani:wght@400;600;700&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#050816;
+    overflow-x:hidden;
+    font-family:'Rajdhani',sans-serif;
+}
+
+.gamehub{
+    min-height:100vh;
+    background:#050816;
+    color:white;
+    position:relative;
+    overflow:hidden;
+    padding:70px 8%;
+}
+
+/* ===================== */
+/* Background Grid */
+/* ===================== */
+
+.background-grid{
+    position:absolute;
+    inset:0;
+
+    background-image:
+        linear-gradient(rgba(0,255,255,.05) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,255,255,.05) 1px,transparent 1px);
+
+    background-size:50px 50px;
+}
+
+/* ===================== */
+/* Header */
+/* ===================== */
+
+.header{
+    position:relative;
+    z-index:2;
+    text-align:center;
+    margin-bottom:70px;
+}
+
+.arena-text{
+
+    font-family:'Orbitron',sans-serif;
+
+    letter-spacing:10px;
+
+    color:#9ca3af;
+
+    font-size:18px;
+
+    margin-bottom:20px;
+
+}
+
+.header h1{
+
+    font-family:'Orbitron',sans-serif;
+
+    font-size:4rem;
+
+    margin-bottom:18px;
+
+    background:linear-gradient(90deg,#66ff4d,#00F5FF);
+
+    -webkit-background-clip:text;
+
+    -webkit-text-fill-color:transparent;
+
+    text-shadow:0 0 25px rgba(0,245,255,.35);
+
+}
+
+.header h1 span{
+
+    -webkit-text-fill-color:#ffffff;
+
+}
+
+.subtitle{
+
+    color:#b6bfd3;
+
+    font-size:1.2rem;
+
+}
+
+/* ===================== */
+/* Cards */
+/* ===================== */
+
+.game-grid{
+
+    position:relative;
+
+    z-index:2;
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+
+    gap:35px;
+
+}
+
+.game-card{
+
+    position:relative;
+
+    overflow:hidden;
+
+    background:rgba(255,255,255,.05);
+
+    backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:24px;
+
+    padding:35px;
+
+    text-align:center;
+
+    transition:.35s;
+
+}
+
+.card-glow{
+
+    position:absolute;
+
+    width:220px;
+
+    height:220px;
+
+    background:var(--accent);
+
+    opacity:.15;
+
+    filter:blur(90px);
+
+    top:-90px;
+
+    right:-70px;
+
+    transition:.4s;
+
+}
+
+.game-card:hover{
+
+    transform:translateY(-10px);
+
+    border-color:var(--accent);
+
+    box-shadow:0 0 30px rgba(255,255,255,.08);
+
+}
+
+.game-card:hover .card-glow{
+
+    transform:scale(1.4);
+
+    opacity:.3;
+
+}
+
+.badge{
+
+    display:inline-block;
+
+    padding:7px 16px;
+
+    border-radius:20px;
+
+    border:1px solid var(--accent);
+
+    color:var(--accent);
+
+    background:rgba(255,255,255,.05);
+
+    font-size:13px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    margin-bottom:20px;
+
+    text-transform:uppercase;
+
+}
+
+.emoji{
+
+    font-size:65px;
+
+    margin-bottom:20px;
+
+    animation:float 3s ease-in-out infinite;
+
+}
+
+.game-card h2{
+
+    font-family:'Orbitron',sans-serif;
+
+    font-size:1.6rem;
+
+    margin-bottom:18px;
+
+}
+
+.game-card p{
+
+    color:#b6bfd3;
+
+    line-height:1.6;
+
+    min-height:60px;
+
+    margin-bottom:28px;
+
+}
+
+/* ===================== */
+/* PLAY BUTTON */
+/* ===================== */
+
+.play-btn{
+
+    width:100%;
+
+    padding:16px;
+
+    border:none;
+
+    border-radius:14px;
+
+    cursor:pointer;
+
+    font-family:'Orbitron',sans-serif;
+
+    font-size:17px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    color:#ffffff;
+
+    background:linear-gradient(135deg,var(--accent),#00F5FF);
+
+    transition:.35s;
+
+    box-shadow:
+        0 0 18px rgba(0,245,255,.35);
+
+}
+
+.play-btn:hover{
+
+    transform:translateY(-3px);
+
+    filter:brightness(1.08);
+
+    box-shadow:
+        0 0 25px var(--accent),
+        0 0 50px rgba(0,245,255,.4);
+
+}
+
+/* ===================== */
+/* Floating Animation */
+/* ===================== */
+
+@keyframes float{
+
+    0%{
+        transform:translateY(0px);
+    }
+
+    50%{
+        transform:translateY(-8px);
+    }
+
+    100%{
+        transform:translateY(0px);
+    }
+
+}
+
+/* ===================== */
+/* Responsive */
+/* ===================== */
+
+@media (max-width:900px){
+
+    .header h1{
+
+        font-size:3rem;
+
+    }
+
+}
+
+@media (max-width:768px){
+
+    .gamehub{
+
+        padding:40px 20px;
+
+    }
+
+    .header h1{
+
+        font-size:2.4rem;
+
+    }
+
+    .arena-text{
+
+        letter-spacing:5px;
+
+        font-size:14px;
+
+    }
+
+    .subtitle{
+
+        font-size:1rem;
+
+    }
+
+}

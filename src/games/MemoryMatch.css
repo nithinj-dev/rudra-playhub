@@ -1,0 +1,392 @@
+/* File: MemoryMatch.css */
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Rajdhani:wght@400;600;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #050816;
+  overflow-x: hidden;
+  font-family: "Rajdhani", sans-serif;
+}
+
+.memory-page {
+  min-height: 100vh;
+  background: #050816;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 40px;
+}
+
+.background-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+}
+
+.menu-screen {
+  position: relative;
+  z-index: 2;
+  width: min(650px, 100%);
+  text-align: center;
+}
+
+.brain {
+  font-size: 70px;
+  margin-bottom: 20px;
+}
+
+.menu-screen h1 {
+  font-family: "Orbitron", sans-serif;
+  font-size: 64px;
+  background: linear-gradient(90deg, #00f5ff, #66ff4d);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 15px;
+}
+
+.arena-text {
+  letter-spacing: 8px;
+  color: #8d99ae;
+  margin-bottom: 35px;
+}
+
+.instructions {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  border-radius: 24px;
+  padding: 35px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 35px;
+}
+
+.instructions h2 {
+  color: #66ff4d;
+  margin-bottom: 20px;
+  font-family: "Orbitron", sans-serif;
+}
+
+.instructions ul {
+  list-style: none;
+  text-align: left;
+  line-height: 2;
+  font-size: 20px;
+}
+
+.start-btn {
+  width: min(320px, 100%);
+  padding: 18px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(90deg, #66ff4d, #00f5ff);
+  color: white;
+  font-family: "Orbitron", sans-serif;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.start-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 30px #00f5ff;
+}
+
+.countdown-screen {
+  position: relative;
+  z-index: 2;
+}
+
+.countdown-screen h1 {
+  font-size: 170px;
+  font-family: "Orbitron", sans-serif;
+  color: #66ff4d;
+  text-shadow: 0 0 40px #66ff4d;
+  animation: pop 0.9s ease;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.game-screen {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.top-bar {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.game-title {
+  font-family: "Orbitron", sans-serif;
+  font-size: 38px;
+  color: #66ff4d;
+  text-align: center;
+  text-shadow: 0 0 20px #66ff4d;
+}
+
+.stat {
+  min-height: 94px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 15px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(15px);
+}
+
+.stat small {
+  color: #8d99ae;
+  letter-spacing: 2px;
+}
+
+.stat h3 {
+  margin-top: 8px;
+  font-size: 28px;
+  color: #00f5ff;
+  font-family: "Orbitron", sans-serif;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(4, 150px);
+  gap: 24px;
+  justify-content: center;
+}
+
+.memory-card {
+  width: 150px;
+  height: 150px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  perspective: 1000px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.memory-card:disabled {
+  cursor: default;
+}
+
+.card-inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.memory-card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  font-size: 55px;
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);
+}
+
+.card-front {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.03)
+  );
+}
+
+.card-back {
+  transform: rotateY(180deg);
+  background: linear-gradient(135deg, #00f5ff, #66ff4d);
+  color: #05111f;
+  font-size: 62px;
+}
+
+.memory-card:not(:disabled):hover {
+  transform: translateY(-6px) scale(1.03);
+}
+
+.memory-card:not(:disabled):hover .card-front,
+.memory-card:focus-visible .card-front {
+  border-color: #00f5ff;
+  box-shadow:
+    0 0 20px rgba(0, 245, 255, 0.45),
+    0 0 45px rgba(0, 245, 255, 0.25);
+}
+
+.memory-card:focus-visible {
+  outline: 2px solid #66ff4d;
+  outline-offset: 5px;
+  border-radius: 18px;
+}
+
+.memory-card.matched .card-back {
+  animation:
+    matchedPulse 0.9s infinite alternate,
+    glow 2s infinite;
+}
+
+@keyframes matchedPulse {
+  from {
+    transform: rotateY(180deg) scale(1);
+  }
+
+  to {
+    transform: rotateY(180deg) scale(1.04);
+  }
+}
+
+@keyframes glow {
+  from {
+    box-shadow:
+      0 0 15px #00f5ff,
+      0 0 25px #66ff4d;
+  }
+
+  to {
+    box-shadow:
+      0 0 30px #00f5ff,
+      0 0 60px #66ff4d;
+  }
+}
+
+@media (max-width: 900px) {
+  .memory-page {
+    padding: 24px 16px;
+  }
+
+  .top-bar {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .game-title {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    font-size: 28px;
+  }
+
+  .board {
+    grid-template-columns: repeat(4, 110px);
+    gap: 12px;
+  }
+
+  .memory-card {
+    width: 110px;
+    height: 110px;
+  }
+
+  .card-front,
+  .card-back {
+    font-size: 44px;
+  }
+}
+
+@media (max-width: 520px) {
+  .memory-page {
+    align-items: flex-start;
+    overflow-y: auto;
+  }
+
+  .menu-screen h1 {
+    font-size: 40px;
+  }
+
+  .brain {
+    font-size: 56px;
+  }
+
+  .instructions {
+    padding: 24px;
+  }
+
+  .instructions ul {
+    font-size: 17px;
+  }
+
+  .countdown-screen {
+    margin: auto;
+  }
+
+  .countdown-screen h1 {
+    font-size: 120px;
+  }
+
+  .top-bar {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .stat {
+    min-height: 78px;
+    padding: 10px 6px;
+  }
+
+  .stat h3 {
+    font-size: 19px;
+  }
+
+  .board {
+    width: 100%;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .memory-card {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+  }
+
+  .card-front,
+  .card-back {
+    font-size: clamp(30px, 10vw, 44px);
+    border-radius: 12px;
+  }
+}

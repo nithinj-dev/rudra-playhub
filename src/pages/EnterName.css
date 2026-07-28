@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Rajdhani:wght@400;600;700&display=swap');
+
+.enter-page{
+    min-height:100vh;
+    background:#050816;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    position:relative;
+    overflow:hidden;
+    color:white;
+    font-family:'Rajdhani',sans-serif;
+}
+
+.background-grid{
+    position:absolute;
+    inset:0;
+    background-image:
+    linear-gradient(rgba(0,255,255,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,255,255,.05) 1px,transparent 1px);
+    background-size:50px 50px;
+}
+
+.enter-card{
+
+    width:500px;
+
+    padding:50px;
+
+    border-radius:25px;
+
+    background:rgba(255,255,255,.05);
+
+    backdrop-filter:blur(20px);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    text-align:center;
+
+    z-index:2;
+
+    box-shadow:0 0 60px rgba(0,0,0,.4);
+
+}
+
+.enter-card h1{
+
+    font-family:'Orbitron';
+
+    font-size:40px;
+
+    margin-bottom:15px;
+
+}
+
+.enter-card p{
+
+    opacity:.75;
+
+    margin-bottom:30px;
+
+}
+
+.enter-card input{
+
+    width:100%;
+
+    padding:18px;
+
+    font-size:20px;
+
+    border-radius:12px;
+
+    border:none;
+
+    outline:none;
+
+    background:#111827;
+
+    color:white;
+
+    margin-bottom:30px;
+
+}
+
+.enter-card input:focus{
+
+    box-shadow:0 0 20px #00F5FF;
+
+}
+
+.enter-card button{
+
+    width:100%;
+
+    padding:18px;
+
+    border:none;
+
+    border-radius:12px;
+
+    font-size:20px;
+
+    cursor:pointer;
+
+    font-family:'Orbitron';
+
+    background:linear-gradient(90deg,#00F5FF,#7C3AED);
+
+    color:white;
+
+    transition:.3s;
+
+}
+
+.enter-card button:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:0 0 30px #00F5FF;
+
+}
