@@ -10,7 +10,7 @@ import NotFound from "./pages/NotFound";
 import ReactionTime from "./games/ReactionTime";
 import MemoryMatch from "./games/MemoryMatch";
 import CatchBug from "./games/CatchBug";
-import FindRudraLogo from "./games/FindRudraLogo";
+import FindRudralogo from "./games/FindRudralogo";
 
 
 function App() {
@@ -29,7 +29,7 @@ function App() {
         <Route path="/games/reaction" element={<ReactionTime />} />
         <Route path="/games/memory" element={<MemoryMatch />} />
         <Route path="/games/catch-bug" element={<CatchBug />} />
-        <Route path="/games/find-rudra" element={<FindRudraLogo />} />
+        <Route path="/games/find-rudra" element={<FindRudralogo />} />
 
         {/* 404 Page */}
         <Route path="*" element={<NotFound />} />

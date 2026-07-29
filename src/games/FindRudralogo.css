@@ -21,14 +21,34 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 .ctb-buttons{
-    display:flex;
-    justify-content:center;
-    gap:16px;
-    flex-wrap:wrap;
-    margin-top:25px;
 
-    border:3px solid red;
-    min-height:120px;
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:24px;
+
+    flex-wrap:wrap;
+
+    margin-top:45px;
+
+    width:100%;
+}
+@media(max-width:768px){
+
+.ctb-buttons{
+    flex-direction:column;
+}
+
+.rg-initiate-btn.reboot{
+
+    width:100%;
+
+    max-width:320px;
+}
+
 }
 .rudra-game {
   min-height: 100vh;
@@ -348,13 +368,54 @@
 
 .rg-initiate-btn:active { transform: translateY(1px); }
 
-.rg-initiate-btn.reboot {
-  background: linear-gradient(135deg, #22c55e, #16a34a);
-  box-shadow: 0 0 30px rgba(34, 197, 94, 0.3);
+.rg-initiate-btn.reboot{
+    width:240px;
+    height:64px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+
+    background:rgba(6,18,32,.92);
+
+    border:1px solid rgba(0,200,255,.45);
+    border-radius:12px;
+
+    color:#dff6ff;
+
+    font-family:"Orbitron",sans-serif;
+    font-size:.9rem;
+    font-weight:700;
+    letter-spacing:3px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    box-shadow:
+        inset 0 0 20px rgba(0,180,255,.08),
+        0 0 15px rgba(0,180,255,.12);
 }
 
-.rg-initiate-btn.reboot:hover {
-  box-shadow: 0 5px 40px rgba(34, 197, 94, 0.5);
+.rg-initiate-btn.reboot:hover{
+
+    transform:translateY(-4px);
+
+    border-color:#00d9ff;
+
+    color:white;
+
+    box-shadow:
+        0 0 12px #00d9ff,
+        0 0 30px rgba(0,217,255,.35),
+        inset 0 0 20px rgba(0,217,255,.18);
+}
+.rg-initiate-btn.reboot:active{
+    transform:scale(.98);
+}
+.rg-play-icon{
+    font-size:1.2rem;
 }
 
 .rg-play-icon { font-size: 1rem; }

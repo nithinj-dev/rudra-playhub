@@ -699,16 +699,8 @@ export default function RudraGame() {
             
             <div className="ctb-buttons">
   <button className="rg-initiate-btn reboot" onClick={() => setPhase("menu")}>
-    <button
-    style={{
-        background: "red",
-        color: "white",
-        padding: "20px",
-        fontSize: "20px"
-    }}
->
-TEST
-</button>
+    <span className="rg-play-icon">🔄️</span>
+    <span>Play Again</span>
   </button>
 
   <button className="rg-initiate-btn reboot" onClick={() => navigate("/games")}>
