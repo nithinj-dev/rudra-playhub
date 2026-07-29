@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import "./FindRudralogo.css";
 import { useNavigate } from "react-router-dom";
+import { saveScore } from "../services/leaderboardService";
 const MAX_LEVELS = 20;
 
 const DIFFICULTY = {
@@ -307,20 +308,40 @@ export default function RudraGame() {
     setPhase("playing");
   };
 
-  const endGame = useCallback(() => {
-    setPhase("gameover");
-    clearInterval(timerRef.current);
-    clearInterval(moveRef.current);
-    clearInterval(glitchRef.current);
-    setPersonalBest((prev) => {
-      if (score > prev.score) {
-        const next = { score, diff: difficulty };
-        localStorage.setItem("rudra_best", JSON.stringify(next));
-        return next;
-      }
-      return prev;
-    });
-  }, [score, difficulty]);
+const endGame = useCallback(async () => {
+  setPhase("gameover");
+
+  clearInterval(timerRef.current);
+  clearInterval(moveRef.current);
+  clearInterval(glitchRef.current);
+
+ try {
+  const player = localStorage.getItem("playerName");
+
+  await saveScore(
+    player,
+    "findLogo",
+    score
+  );
+} catch (err) {
+  console.error("Error saving score:", err);
+}
+
+  setPersonalBest((prev) => {
+    if (score > prev.score) {
+      const next = {
+        score,
+        diff: difficulty,
+      };
+
+      localStorage.setItem("rudra_best", JSON.stringify(next));
+      return next;
+    }
+
+    return prev;
+  });
+
+}, [score, difficulty]);
 
   useEffect(() => {
     if (phase !== "playing") return;
