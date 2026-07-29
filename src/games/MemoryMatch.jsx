@@ -4,6 +4,7 @@ import confetti from "canvas-confetti";
 import VictoryModal from "./VictoryModal";
 import "./MemoryMatch.css";
 import { saveScore } from "../services/leaderboardService";
+import { useNavigate } from "react-router-dom";
 
 const EMOJIS = ["🧠", "🚀", "🎮", "⚡", "💎", "🌙", "🎧", "🍎"];
 const STARTING_SCORE = 1000;

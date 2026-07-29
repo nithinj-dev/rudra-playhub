@@ -1,8 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import "./ReactionTime.css";
 import { saveScore } from "../services/leaderboardService";
+import { useNavigate } from "react-router-dom";
 
 function ReactionTime() {
+  const navigate = useNavigate();
+  
   const playerName = localStorage.getItem("playerName") || "Player";
 
   const [gameState, setGameState] = useState("idle");
@@ -58,6 +61,12 @@ saveScore(
       setGameState("result");
     }
   };
+  <button
+    className="back-btn"
+    onClick={() => navigate("/games")}
+>
+    ← Game Hub
+</button>
 
   // Cleanup timer
   useEffect(() => {

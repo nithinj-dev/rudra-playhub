@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './CatchBug.css';
 import { saveScore } from "../services/leaderboardService";
+import { useNavigate } from "react-router-dom";
 
 /* ==================== AUDIO ENGINE ==================== */
 const AudioEngine = {
@@ -60,6 +61,7 @@ const HIGH_SCORE_KEY = 'ctb_highscore_react';
 
 /* ==================== MAIN COMPONENT ==================== */
 export default function CatchTheBug() {
+  const navigate = useNavigate();
   /* ---- State ---- */
   const [gameState, setGameState] = useState('menu'); // menu | countdown | playing | gameover
   const [score, setScore] = useState(0);
@@ -118,7 +120,7 @@ export default function CatchTheBug() {
     setTimeLeft(DURATION);
     setLevel(1);
     levelRef.current = 1;
-    setSpawnInterval(1500);
+    setSpawnInterval(1300);
     setBugs([]);
     setParticles([]);
     setPopups([]);
@@ -126,7 +128,7 @@ export default function CatchTheBug() {
     setShake(false);
     setFlash(false);
     setDiffWarning(false);
-    bugLifetimeRef.current = 2000;
+    bugLifetimeRef.current = 1700;
     bugIdRef.current = 0;
     setGameState('countdown');
   }, []);
@@ -161,14 +163,24 @@ export default function CatchTheBug() {
         const next = Math.max(0, prev - 0.1);
         const elapsed = DURATION - next;
         // Level up every 20 seconds instead of 15 (slower ramp)
-        const nextLevel = Math.min(4, Math.floor(elapsed / 20) + 1);
+        const nextLevel = Math.min(4, Math.floor(elapsed / 15) + 1);
 
         if (nextLevel > levelRef.current) {
           setLevel(nextLevel);
           levelRef.current = nextLevel;
           // Slower spawn interval decrease
-          setSpawnInterval(Math.max(700, 1500 - (nextLevel - 1) * 200));
-          bugLifetimeRef.current = Math.max(1200, 2000 - (nextLevel - 1) * 200);
+         if (nextLevel === 2) {
+  setSpawnInterval(1150);
+  bugLifetimeRef.current = 1500;
+}
+else if (nextLevel === 3) {
+  setSpawnInterval(950);
+  bugLifetimeRef.current = 1300;
+}
+else if (nextLevel === 4) {
+  setSpawnInterval(600);      // Very fast spawning
+  bugLifetimeRef.current = 800; // Bugs disappear quickly
+}
           setDiffWarning(true);
           AudioEngine.levelUp();
           addTimer(() => setDiffWarning(false), 2000);
@@ -507,7 +519,27 @@ export default function CatchTheBug() {
             </div>
           </div>
 
-          <button className="ctb-btn" onClick={startGame}>Play Again</button>
+         <div className="ctb-buttons">
+
+  <button className="ctb-btn" onClick={startGame}>
+    Play Again
+  </button>
+
+  <button
+    className="ctb-btn"
+    onClick={() => navigate("/games")}
+  >
+    Game Hub
+  </button>
+
+  <button
+    className="ctb-btn"
+    onClick={() => navigate("/leaderboard")}
+  >
+    Leaderboard
+  </button>
+
+</div>
           <p className="ctb-hint">Press SPACE to restart</p>
         </div>
       )}

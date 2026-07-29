@@ -20,6 +20,31 @@
   padding: 0;
   box-sizing: border-box;
 }
+.back-btn{
+    padding: 14px 34px;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+
+    font-size: 1rem;
+    font-weight: 700;
+
+    color: white;
+    background: linear-gradient(135deg, #00F5FF, #7C3AED);
+
+    transition: .3s;
+    text-align: center;
+    display: block;
+    margin: 40px auto;
+}
+
+.back-btn:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 0 20px rgba(0,245,255,.5);
+}
+.rudra-back-btn{
+    display: block;
+}
 
 .rudra-page {
   min-height: 100vh;

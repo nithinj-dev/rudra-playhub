@@ -1,8 +1,10 @@
 import React from 'react';
 import './About.css';
 import rudraLogo from "../assets/rudra-logo.png";
+import { useNavigate } from "react-router-dom";
 
 const RudraAbout = () => {
+  const navigate = useNavigate();
   return (
     <div className="rudra-page">
       {/* ─── BACKGROUND EFFECTS ─── */}
@@ -95,7 +97,12 @@ const RudraAbout = () => {
           </div>
         </div>
       </section>
-
+      <button
+  className="back-btn"
+  onClick={() => navigate("/")}
+>
+  ← Back to Home
+</button>
       {/* ─── FOOTER ─── */}
       <footer className="rudra-footer">
         <div className="rudra-footer-line" />

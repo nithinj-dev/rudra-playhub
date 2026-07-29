@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 
 function GameHub() {
     const navigate = useNavigate();
-
     const playerName = localStorage.getItem("playerName") || "Player";
 
     const games = [
@@ -56,6 +55,22 @@ function GameHub() {
                     Select a game and climb the leaderboard.
                 </p>
             </div>
+            
+            <div className="gamehub-nav">
+
+    <button onClick={() => navigate("/")}>
+        🏠 Home
+    </button>
+
+    <button onClick={() => navigate("/leaderboard")}>
+        🏆 Leaderboard
+    </button>
+
+    <button onClick={() => navigate("/about")}>
+        ℹ️ About
+    </button>
+
+</div>
 
             <div className="game-grid">
                 {games.map((game) => (
@@ -89,6 +104,7 @@ function GameHub() {
             </div>
         </div>
     );
+    
 }
 
 export default GameHub;

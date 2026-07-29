@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import "./FindRudralogo.css";
-
+import { useNavigate } from "react-router-dom";
 const MAX_LEVELS = 20;
 
 const DIFFICULTY = {
@@ -231,6 +231,7 @@ const formatTime = (seconds) => {
 };
 
 export default function RudraGame() {
+  const navigate = useNavigate();
   const [phase, setPhase] = useState("menu");
   const [difficulty, setDifficulty] = useState("casual");
   const [level, setLevel] = useState(1);
@@ -695,10 +696,31 @@ export default function RudraGame() {
               </div>
             </div>
 
-            <button className="rg-initiate-btn reboot" onClick={() => setPhase("menu")}>
-              <span className="rg-play-icon">↻</span>
-              <span>REBOOT SYSTEM</span>
-            </button>
+            
+            <div className="ctb-buttons">
+  <button className="rg-initiate-btn reboot" onClick={() => setPhase("menu")}>
+    <button
+    style={{
+        background: "red",
+        color: "white",
+        padding: "20px",
+        fontSize: "20px"
+    }}
+>
+TEST
+</button>
+  </button>
+
+  <button className="rg-initiate-btn reboot" onClick={() => navigate("/games")}>
+    <span className="rg-play-icon">🎮</span>
+    <span>GAME HUB</span>
+  </button>
+
+  <button className="rg-initiate-btn reboot" onClick={() => navigate("/leaderboard")}>
+    <span className="rg-play-icon">🏆</span>
+    <span>LEADERBOARD</span>
+  </button>
+</div>
           </div>
         </div>
       )}

@@ -11,14 +11,22 @@ function Home() {
 
             <nav className="navbar">
                 <div className="logo">
-                    ⚡ RUDRA
+                    🎮 RUDRA GAME ARENA
                 </div>
 
                 <div className="nav-links">
-                    <a href="#">Games</a>
-                    <a href="#">Leaderboard</a>
-                    <a href="#">About</a>
-                </div>
+    <button onClick={() => navigate("/games")}>
+        Games
+    </button>
+
+    <button onClick={() => navigate("/leaderboard")}>
+        Leaderboard
+    </button>
+
+    <button onClick={() => navigate("/about")}>
+        About
+    </button>
+</div>
             </nav>
 
             <section className="hero">

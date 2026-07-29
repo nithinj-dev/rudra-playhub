@@ -79,6 +79,13 @@
   background: linear-gradient(135deg, #fff9db, #fffef5);
 }
 
+.leaderboard-item:nth-child(2) {
+  border-left: 5px solid silver;
+}
+
+.leaderboard-item:nth-child(3) {
+  border-left: 5px solid #cd7f32;
+}
 /* ======================
    Rank
 ====================== */
@@ -104,11 +111,12 @@
 }
 
 .game-name {
-  margin-top: 4px;
+  margin-top: 6px;
   color: var(--primary-dark);
   font-weight: 600;
+  font-size: 0.9rem;
+  line-height: 1.6;
 }
-
 .time {
   margin-top: 4px;
   color: var(--text-light);
@@ -119,10 +127,23 @@
    Score
 ====================== */
 
+
 .score {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: var(--secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.total-score {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.total-label {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 2px;
 }
 
 /* ======================
@@ -227,6 +248,7 @@
     text-align: center;
     gap: 0.8rem;
   }
+
 
   .player-details {
     margin-left: 0;
