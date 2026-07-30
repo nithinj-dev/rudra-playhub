@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Memories.css';
+import './Capturemoment.css';
 import { uploadImage } from "../services/CloudinaryService";
 import { saveMemory } from "../firebase/memories";
 
@@ -179,11 +179,11 @@ const handleNameContinue = () => {
 
     <h2>Capture Your Moment</h2>
 
-    <p>Enter your name before taking your picture.</p>
+    <p>Enter your name or a MSG </p>
 
     <input
       type="text"
-      placeholder="Your Name"
+      placeholder="Your Name or a MSG"
       value={playerName}
       onChange={(e) => setPlayerName(e.target.value)}
     />

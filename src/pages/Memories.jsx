@@ -71,7 +71,7 @@ const Memories = () => {
 
               <div className="polaroid-img-wrap">
                 <img
-  src={photo.imageUrl}
+  src={photo.image}
   alt="memory"
   onError={() => console.log("Image failed:", photo.image)}
 />
@@ -83,7 +83,9 @@ const Memories = () => {
 
               <div className="polaroid-meta">
                 <div className="polaroid-name">👤 {photo.uploader}</div>
-                <div className="polaroid-date">🕒 {photo.date}</div>
+                <div className="polaroid-date">
+  🕒 {photo.createdAt?.toDate().toLocaleString()}
+</div>
               </div>
             </div>
           ))}

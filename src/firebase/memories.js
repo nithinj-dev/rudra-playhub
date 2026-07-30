@@ -5,10 +5,11 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 
-export async function saveMemory(name, imageUrl) {
+
+export async function saveMemory(playerName, imageUrl) {
   await addDoc(collection(db, "memories"), {
-    name,
-    imageUrl,
+    uploader: playerName,
+    image: imageUrl,
     createdAt: serverTimestamp(),
   });
 }
