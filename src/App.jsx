@@ -11,6 +11,7 @@ import ReactionTime from "./games/ReactionTime";
 import MemoryMatch from "./games/MemoryMatch";
 import CatchBug from "./games/CatchBug";
 import FindRudralogo from "./games/FindRudralogo";
+import Capturemoment from "./pages/Capturemoment";
 import Memories from "./pages/Memories";
 import "./responsive.css";
 
@@ -25,6 +26,7 @@ function App() {
         <Route path="/results" element={<Results />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/about" element={<About />} />
+        <Route path="/capture" element={<Capturemoment />} />
         <Route path="/memories" element={<Memories />} />
 
         {/* Games */}

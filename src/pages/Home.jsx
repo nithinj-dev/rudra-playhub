@@ -100,14 +100,20 @@ function Home() {
 
     <button
         className="start-btn"
-        onClick={() => navigate("/player")}
+        onClick={() => {
+    localStorage.setItem("fromGames","true");
+    navigate("/player");
+}}
     >
         🎮 Start Playing →
     </button>
 
     <button
         className="memory-btn"
-        onClick={() => navigate("/memories")}
+        onClick={() => {
+    localStorage.removeItem("fromGames");
+    navigate("/capture");
+}}
     >
         📸 Capture a Moment
     </button>

@@ -43,7 +43,7 @@ function GameHub() {
             emoji: "📸",
             description: "Capture your best moments at Santhe 2026.",
             difficulty: "Memories",
-            route: "/memories",
+            route: "/capture",
             color: "#7C3AED",
         },
     ];

@@ -1,8 +1,17 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Memories.css';
+import { uploadImage } from "../services/cloudinaryService";
+import { saveMemory } from "../firebase/memories";
 
 const Memories = () => {
+  const [playerName, setPlayerName] = useState(
+  localStorage.getItem("playerName") || ""
+);
+
+const [hasName, setHasName] = useState(
+  localStorage.getItem("fromGames") === "true"
+);
   const navigate = useNavigate();
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -12,6 +21,7 @@ const Memories = () => {
   const [imageData, setImageData] = useState(null);
   const [cameraError, setCameraError] = useState('');
   const [isStarting, setIsStarting] = useState(true);
+  
 
   const stopCamera = useCallback(() => {
     requestRef.current += 1;
@@ -77,9 +87,12 @@ const Memories = () => {
   }, []);
 
   useEffect(() => {
+  if (hasName) {
     startCamera();
-    return stopCamera;
-  }, [startCamera, stopCamera]);
+  }
+
+  return stopCamera;
+}, [hasName, startCamera, stopCamera]);
 
   const capturePhoto = () => {
     const video = videoRef.current;
@@ -106,10 +119,37 @@ const Memories = () => {
     startCamera();
   };
 
-  const handleUpload = (capturedImage) => {
-    console.log(capturedImage);
-  };
+  const handleUpload = async (capturedImage) => {
+  try {
+    // Upload to Cloudinary
+    const imageUrl = await uploadImage(capturedImage);
 
+    // Get player's name
+    const playerName =
+      localStorage.getItem("playerName") || "Anonymous";
+
+    // Save to Firestore
+    await saveMemory(playerName, imageUrl);
+
+    alert("Photo uploaded successfully!");
+
+    // Go to Memory Wall
+    navigate("/memories");
+
+  } catch (err) {
+    console.error(err);
+    alert("Upload failed.");
+  }
+};
+const handleNameContinue = () => {
+  if (playerName.trim().length < 3) {
+    alert("Enter at least 3 characters");
+    return;
+  }
+
+  localStorage.setItem("playerName", playerName.trim());
+  setHasName(true);
+};
   return (
     <main className="memories-page">
       <div className="memories-orb memories-orb-one" aria-hidden="true" />
@@ -129,8 +169,39 @@ const Memories = () => {
           <h1 className="memories-title">📸 Rudra Memories</h1>
           <p className="memories-subtitle">Capture your best moment!</p>
         </header>
+        {!hasName ? (
 
-        <div className="camera-card">
+<div className="camera-card">
+
+  <div className="name-card">
+
+    <div className="name-icon">📸</div>
+
+    <h2>Capture Your Moment</h2>
+
+    <p>Enter your name before taking your picture.</p>
+
+    <input
+      type="text"
+      placeholder="Your Name"
+      value={playerName}
+      onChange={(e) => setPlayerName(e.target.value)}
+    />
+
+    <button
+      className="memory-button upload-button"
+      onClick={handleNameContinue}
+    >
+      Continue →
+    </button>
+
+  </div>
+
+</div>
+
+) : (
+
+<div className="camera-card">
           <div className="camera-frame">
             {imageData ? (
               <img
@@ -217,7 +288,10 @@ const Memories = () => {
               </button>
             )}
           </div>
+          
         </div>
+        
+)}
       </section>
     </main>
   );

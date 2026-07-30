@@ -10,6 +10,85 @@
   isolation: isolate;
 }
 
+.name-card{
+    width:100%;
+    max-width:500px;
+    margin:20px auto;
+
+    background: rgba(20,20,30,.75);
+    backdrop-filter: blur(20px);
+
+    border:1px solid rgba(0,229,255,.25);
+    border-radius:24px;
+
+    padding:40px;
+     width:500px;
+
+    padding:50px;
+
+    border-radius:25px;
+
+    background:rgba(255,255,255,.05);
+
+    backdrop-filter:blur(20px);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    text-align:center;
+
+    z-index:2;
+
+    box-shadow:0 0 60px rgba(0,0,0,.4);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:20px;
+
+    box-shadow:0 0 35px rgba(0,229,255,.15);
+}
+
+.name-card h2{
+    color:white;
+    margin:0;
+    font-size:32px;
+}
+
+.name-card p{
+    color:#B0B0B0;
+    margin:0;
+}
+
+.name-icon{
+    font-size:55px;
+}
+
+.name-card input{
+    width:100%;
+    padding:16px;
+
+    background:#10131d;
+
+    color:white;
+
+    border:1px solid #00d4ff;
+    border-radius:12px;
+
+    outline:none;
+
+    font-size:18px;
+}
+
+.name-card input::placeholder{
+    color:#7b7b7b;
+}
+
+.name-card input:focus{
+    box-shadow:0 0 15px #00d4ff;
+}
+
+.name-card button{
+    width:100%;
+}
 .memories-page::before {
   position: absolute;
   inset: 0;
