@@ -26,6 +26,38 @@ overflow:hidden;
 color:white;
 
 }
+.hero-buttons{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+    align-items:center;
+    margin-top:30px;
+}
+
+.memory-btn{
+    padding:16px 36px;
+    border:none;
+    border-radius:16px;
+    cursor:pointer;
+    font-size:1rem;
+    font-weight:700;
+    color:white;
+
+    background:linear-gradient(135deg,#8b5cf6,#6d28d9);
+
+    box-shadow:0 10px 25px rgba(124,58,237,.35);
+
+    transition:.25s;
+}
+
+.memory-btn:hover{
+    transform:translateY(-4px) scale(1.03);
+    box-shadow:0 16px 35px rgba(124,58,237,.45);
+}
+
+.memory-btn:active{
+    transform:scale(.98);
+}
 
 .background-grid{
 

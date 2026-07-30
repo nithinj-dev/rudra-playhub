@@ -96,12 +96,23 @@ function Home() {
                     Win exciting rewards.
                 </p>
 
-                <button
-                    className="start-btn"
-                    onClick={() => navigate("/player")}
-                >
-                    Start Playing →
-                </button>
+                <div className="hero-buttons">
+
+    <button
+        className="start-btn"
+        onClick={() => navigate("/player")}
+    >
+        🎮 Start Playing →
+    </button>
+
+    <button
+        className="memory-btn"
+        onClick={() => navigate("/memories")}
+    >
+        📸 Capture a Moment
+    </button>
+
+</div>
 
             </section>
 
