@@ -38,6 +38,14 @@ function GameHub() {
             route: "/games/find-rudra",
             color: "#FF4DA6",
         },
+        {
+            title: "Rudra Memories",
+            emoji: "📸",
+            description: "Capture your best moments at Santhe 2026.",
+            difficulty: "Memories",
+            route: "/memories",
+            color: "#7C3AED",
+        },
     ];
 
     return (

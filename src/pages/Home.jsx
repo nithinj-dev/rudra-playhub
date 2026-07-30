@@ -23,6 +23,10 @@ function Home() {
         Leaderboard
     </button>
 
+    <button onClick={() => navigate("/memories")}>
+        📸 Memories
+    </button>
+
     <button onClick={() => navigate("/about")}>
         About
     </button>
