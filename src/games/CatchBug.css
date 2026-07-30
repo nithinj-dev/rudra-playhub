@@ -306,13 +306,14 @@
 /* ==================== BUG ==================== */
 .ctb-bug {
   position: absolute;
-  font-size: 3rem;
+  font-size: 3.5rem;
   cursor: pointer;
   transition: transform 0.1s ease;
   filter: drop-shadow(0 0 15px rgba(57, 255, 20, 0.6));
-  animation: ctb-bugAppear 0.2s ease-out, ctb-bugFloat 0.5s ease-in-out infinite alternate;
+  animation: ctb-bugAppear 0.3s ease-out, ctb-bugFloat 1.2s ease-in-out infinite alternate;
   z-index: 20;
   transform-origin: center;
+  padding: 8px;
 }
 
 .ctb-bug:hover {
@@ -330,8 +331,8 @@
 }
 
 @keyframes ctb-bugFloat {
-  0% { transform: translateY(0) rotate(-5deg); }
-  100% { transform: translateY(-8px) rotate(5deg); }
+  0% { transform: translateY(0) rotate(-3deg); }
+  100% { transform: translateY(-5px) rotate(3deg); }
 }
 
 @keyframes ctb-bugCaught {
@@ -478,4 +479,5 @@
   .ctb-rules { padding: 1.5rem; }
   .ctb-stats-grid { grid-template-columns: 1fr; }
   .ctb-countdown { font-size: 5rem; }
+  .ctb-bug { font-size: 3rem; }
 }
