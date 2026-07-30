@@ -12,6 +12,7 @@ import MemoryMatch from "./games/MemoryMatch";
 import CatchBug from "./games/CatchBug";
 import FindRudralogo from "./games/FindRudralogo";
 import Memories from "./pages/Memories";
+import "./responsive.css";
 
 function App() {
   return (

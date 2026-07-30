@@ -1,35 +1,83 @@
+import { useEffect, useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./Home.css";
-import { useNavigate } from "react-router-dom";
 
 function Home() {
     const navigate = useNavigate();
+    const [menuOpen, setMenuOpen] = useState(false);
+    const navigationRef = useRef(null);
+
+    useEffect(() => {
+        const closeMenu = (event) => {
+            if (event.key === "Escape") {
+                setMenuOpen(false);
+                return;
+            }
+
+            if (
+                menuOpen &&
+                navigationRef.current &&
+                !navigationRef.current.contains(event.target)
+            ) {
+                setMenuOpen(false);
+            }
+        };
+
+        document.addEventListener("keydown", closeMenu);
+        document.addEventListener("pointerdown", closeMenu);
+
+        return () => {
+            document.removeEventListener("keydown", closeMenu);
+            document.removeEventListener("pointerdown", closeMenu);
+        };
+    }, [menuOpen]);
 
     return (
         <div className="home">
 
             <div className="background-grid"></div>
 
-            <nav className="navbar">
+            <nav
+                ref={navigationRef}
+                className="navbar"
+                aria-label="Main navigation"
+            >
                 <div className="logo">
                     🎮 RUDRA GAME ARENA
                 </div>
 
-                <div className="nav-links">
-    <button onClick={() => navigate("/games")}>
+                <button
+                    className={`menu-toggle ${menuOpen ? "is-open" : ""}`}
+                    type="button"
+                    aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+                    aria-expanded={menuOpen}
+                    aria-controls="primary-navigation"
+                    onClick={() => setMenuOpen((open) => !open)}
+                >
+                    <span />
+                    <span />
+                    <span />
+                </button>
+
+                <div
+                    className={`nav-links ${menuOpen ? "is-open" : ""}`}
+                    id="primary-navigation"
+                >
+    <Link to="/games">
         Games
-    </button>
+    </Link>
 
-    <button onClick={() => navigate("/leaderboard")}>
+    <Link to="/leaderboard">
         Leaderboard
-    </button>
+    </Link>
 
-    <button onClick={() => navigate("/memories")}>
+    <Link to="/memories">
         📸 Memories
-    </button>
+    </Link>
 
-    <button onClick={() => navigate("/about")}>
+    <Link to="/about">
         About
-    </button>
+    </Link>
 </div>
             </nav>
 
