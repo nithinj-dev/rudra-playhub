@@ -11,7 +11,7 @@ import ReactionTime from "./games/ReactionTime";
 import MemoryMatch from "./games/MemoryMatch";
 import CatchBug from "./games/CatchBug";
 import FindRudralogo from "./games/FindRudralogo";
-
+import Memories from "./pages/Memories";
 
 function App() {
   return (
@@ -24,12 +24,14 @@ function App() {
         <Route path="/results" element={<Results />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/about" element={<About />} />
+        <Route path="/memories" element={<Memories />} />
 
         {/* Games */}
         <Route path="/games/reaction" element={<ReactionTime />} />
         <Route path="/games/memory" element={<MemoryMatch />} />
         <Route path="/games/catch-bug" element={<CatchBug />} />
         <Route path="/games/find-rudra" element={<FindRudralogo />} />
+
 
         {/* 404 Page */}
         <Route path="*" element={<NotFound />} />
