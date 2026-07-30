@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Memories.css';
-import { uploadImage } from "../services/cloudinaryService";
+import { uploadImage } from "../services/CloudinaryService";
 import { saveMemory } from "../firebase/memories";
 
 const Memories = () => {
